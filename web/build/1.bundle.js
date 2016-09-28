@@ -64300,6 +64300,9 @@ webpackJsonp([1,2],[
 	                    id: 'cypher-query-input',
 	                    value: this.state.value,
 	                    fullWidth: true,
+	                    multiLine: true,
+	                    rows: 2,
+	                    rowsMax: 50,
 	                    hintText: 'Please type a Cypher query and press the ENTER key',
 	                    onChange: this.handleChange,
 	                    onKeyPress: this.handleKeyPress
