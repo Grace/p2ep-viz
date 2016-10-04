@@ -18,6 +18,14 @@ webpackJsonp([0,2],[
 	
 	    var Entrance = __webpack_require__(11).default;
 	    new Entrance().run();
+	
+	    // Define on global window object the very useful function prettyPrint, which helps us print JSON objects
+	    window.console.prettyPrint = function () {
+	        // Loop over arguments, so any number of objects can be passed
+	        for (var i = 0; i < arguments.length; i++) {
+	            console.log(JSON.stringify(arguments[i], 0, 2));
+	        }
+	    };
 	});
 	
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "index.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
