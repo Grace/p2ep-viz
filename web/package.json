@@ -32,6 +32,7 @@
     "react-addons-pure-render-mixin": "^15.1.0",
     "react-addons-transition-group": "^15.1.0",
     "react-addons-update": "^15.1.0",
+    "react-d3-wrap": "^2.1.2",
     "react-dom": "^15.1.0",
     "react-flexbox-grid": "^0.10.2",
     "react-motion": "^0.4.4",

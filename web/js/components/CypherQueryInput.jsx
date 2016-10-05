@@ -1,11 +1,11 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import LinearProgress from 'material-ui/LinearProgress';
-import ActionSearch from 'material-ui/svg-icons/action/play-for-work';
+import QueryGraph from '../components/QueryGraph.jsx';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import FlatButton from 'material-ui/FlatButton';
-import $ from 'jquery'
+import $ from 'jquery';
 import _ from 'lodash';
 import UI from 'UI';
 
@@ -16,6 +16,7 @@ class CypherQueryInput extends React.Component {
         super(props);
         this.transactionUrl = 'http://localhost:7474/db/data/transaction';
         this.commitUrl = '';
+        window.drawGraph = false;
         this.state = {
             userInput: '',
             isLoading: false,
@@ -78,8 +79,6 @@ class CypherQueryInput extends React.Component {
             window.nodeIndexHash = {};
             var nodes = [];
             var relationships = [];
-            var d3_nodes = [];
-            var d3_links = [];
 
             // Fill the nodes and relationship arrays
             for(var i=0; i < results.data.length; i++) {
@@ -95,6 +94,8 @@ class CypherQueryInput extends React.Component {
                 relationships = window.relationships;
             }
 
+            var d3_nodes = [];
+            var d3_links = [];
 
             for(var i2 = 0; i2 < nodes.length; i2++) {
                 var node = nodes[i2];
@@ -142,99 +143,8 @@ class CypherQueryInput extends React.Component {
                 'links': window.d3_links
             };
             console.prettyPrint(window.d3_graph);
-
-            // Draw D3 force-directed graph (uses d3 version 3) TODO: To work, this needs to be changed to d3v4 compatability
-            d3.json(window.d3_graph, function(error, graph) {
-                nodeGraph = graph;
-
-                graph.links.forEach(function(d) {
-                    d.source = graph.nodes[d.source];
-                    d.target = graph.nodes[d.target];
-                });
-
-                link = link.data(graph.links).enter().append("line")
-                    .attr("x1", function(d) { return d.source.x; })
-                    .attr("y1", function(d) { return d.source.y; })
-                    .attr("x2", function(d) { return d.target.x; })
-                    .attr("y2", function(d) { return d.target.y; });
-
-
-                var force = d3.layout.force()
-                    .charge(-120)
-                    .linkDistance(30)
-                    .nodes(graph.nodes)
-                    .links(graph.links)
-                    .size([width, height])
-                    .start();
-
-                function dragstarted(d) {
-                    d3.event.sourceEvent.stopPropagation();
-                    if (!d.selected && !shiftKey) {
-                        // if this node isn't selected, then we have to unselect every other node
-                        node.classed("selected", function(p) { return p.selected =  p.previouslySelected = false; });
-                    }
-
-                    d3.select(this).classed("selected", function(p) { d.previouslySelected = d.selected; return d.selected = true; });
-
-                    node.filter(function(d) { return d.selected; })
-                        .each(function(d) { d.fixed |= 2; })
-                }
-
-                function dragged(d) {
-                    node.filter(function(d) { return d.selected; })
-                        .each(function(d) {
-                            d.x += d3.event.dx;
-                            d.y += d3.event.dy;
-
-                            d.px += d3.event.dx;
-                            d.py += d3.event.dy;
-                        })
-
-                    force.resume();
-                }
-                node = node.data(graph.nodes).enter().append("circle")
-                    .attr("r", 10)
-                    .attr("cx", function(d) { return d.x; })
-                    .attr("cy", function(d) { return d.y; })
-                    .on("dblclick", function(d) { d3.event.stopPropagation(); })
-                    .on("click", function(d) {
-                        if (d3.event.defaultPrevented) return;
-
-                        if (!shiftKey) {
-                            //if the shift key isn't down, unselect everything
-                            node.classed("selected", function(p) { return p.selected =  p.previouslySelected = false; })
-                        }
-
-                        // always select this node
-                        d3.select(this).classed("selected", d.selected = !d.previouslySelected);
-                    })
-                    .on("mouseover", function(d) {
-                        console.log(d);
-                    })
-                    .on("mouseout", function(d) {
-                    })
-                    .on("mouseup", function(d) {
-                        //if (d.selected && shiftKey) d3.select(this).classed("selected", d.selected = false);
-                    })
-                    .call(d3.behavior.drag()
-                        .on("dragstart", dragstarted)
-                        .on("drag", dragged)
-                        .on("dragend", dragended));
-
-                function tick() {
-                    link.attr("x1", function(d) { return d.source.x; })
-                        .attr("y1", function(d) { return d.source.y; })
-                        .attr("x2", function(d) { return d.target.x; })
-                        .attr("y2", function(d) { return d.target.y; });
-
-                    node.attr('cx', function(d) { return d.x; })
-                        .attr('cy', function(d) { return d.y; });
-
-                };
-
-                force.on("tick", tick);
-
-            });
+            //TODO: Draw D3 graph with window.d3_graph as json input
+            window.drawGraph = true;
         };
 
         // POST request that sends the JSON encoded Cypher query (user input) to Neo4j
@@ -305,7 +215,7 @@ class CypherQueryInput extends React.Component {
 
     // Handler that listens for when keys are pressed
     handleKeyPress = (event) => {
-        if(event.key == 'Enter'){
+        if(event.key == 'Enter') {
             event.preventDefault();
             // TODO: add user input validation
             // Ask Neo4j to run the user input as a Cypher Query (currently assumes user input is a valid Cypher query and JavaScript string type)
@@ -339,8 +249,10 @@ class CypherQueryInput extends React.Component {
                     style={this.style.button}
                     onClick={this.handleClick}
                 />
-                {this.state.isLoading && this.state.queryResults === null ? <LinearProgress mode="indeterminate" /> : <br/>}
-                <div align='center' id="d3_selectable_force_directed_graph"></div>
+                {this.state.isLoading && this.state.queryJson === null ? <LinearProgress mode="indeterminate" /> : <br/>}
+
+                <QueryGraph data={[1,2,3]} width={960} height={700} options={{color: '#ff0000', margin: {top: 350, bottom: 0, left: 480, right: 0}}} />
+
             </div>
         );
     }
