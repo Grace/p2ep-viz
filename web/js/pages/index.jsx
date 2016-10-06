@@ -3,7 +3,7 @@
 import React from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import MyCard from '../components/MyCard.jsx';
-import CypherQueryInput from '../components/CypherQueryInput.jsx';
+import Neo4jGraphQueryComponent from '../components/Neo4jGraphQueryComponent.jsx';
 import $ from 'jquery';
 
 class Index extends React.Component {
@@ -20,7 +20,7 @@ class Index extends React.Component {
         <Row>
           <Col xs={12}>
             {/* <MyCard title={`Welcome!`}/> */}
-            <CypherQueryInput />
+            <Neo4jGraphQueryComponent />
           </Col>
 
           <Col xs={12}>

@@ -1,7 +1,7 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import LinearProgress from 'material-ui/LinearProgress';
-import QueryGraph from '../components/QueryGraph.jsx';
+import D3ForceDirectedGraph from './D3ForceDirectedGraph.jsx';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import FlatButton from 'material-ui/FlatButton';
@@ -16,7 +16,9 @@ class CypherQueryInput extends React.Component {
         super(props);
         this.transactionUrl = 'http://localhost:7474/db/data/transaction';
         this.commitUrl = '';
+
         window.drawGraph = false;
+
         this.state = {
             userInput: '',
             isLoading: false,
@@ -34,9 +36,7 @@ class CypherQueryInput extends React.Component {
                 display: 'inline-block',
                 position: 'relative',
             },
-            cypherQueryInput: {
-
-            }
+            cypherQueryInput: {}
         };
     }
 
@@ -81,7 +81,7 @@ class CypherQueryInput extends React.Component {
             var relationships = [];
 
             // Fill the nodes and relationship arrays
-            for(var i=0; i < results.data.length; i++) {
+            for (var i = 0; i < results.data.length; i++) {
                 var data = window.data[i];
                 window.graphs.push(data.graph);
                 window.graphData.push(data);
@@ -97,7 +97,7 @@ class CypherQueryInput extends React.Component {
             var d3_nodes = [];
             var d3_links = [];
 
-            for(var i2 = 0; i2 < nodes.length; i2++) {
+            for (var i2 = 0; i2 < nodes.length; i2++) {
                 var node = nodes[i2];
                 var id = node.id;
                 var label = node.labels[0];
@@ -119,13 +119,13 @@ class CypherQueryInput extends React.Component {
             }
 
             window.d3_nodes = d3_nodes;
-            for(var index = 0; index < d3_nodes.length; index++) {
+            for (var index = 0; index < d3_nodes.length; index++) {
                 var key = d3_nodes[index].id;
                 var value = index;
                 window.nodeIndexHash[key] = value;
             }
 
-            for(var j = 0; j < relationships.length; j++) {
+            for (var j = 0; j < relationships.length; j++) {
                 var relationship = relationships[j];
                 var startNodeId = relationship.startNode;
                 var endNodeId = relationship.endNode;
@@ -174,7 +174,7 @@ class CypherQueryInput extends React.Component {
                         success: function (jsonObject) {
                             console.log('Cypher Query results:');
                             console.prettyPrint(jsonObject);
-                            this.setState({ queryJson: jsonObject });
+                            this.setState({queryJson: jsonObject});
                             window.nodeIdToIndexDict = {};
                             parseQueryJson(jsonObject);
                         }.bind(this),
@@ -182,7 +182,7 @@ class CypherQueryInput extends React.Component {
                             console.log('Error attempting to POST this data:');
                             console.prettyPrint(jsonData);
                             console.error(this.commitUrl, status, err.toString());
-                            this.setState({ queryJson: jsonObject });
+                            this.setState({queryJson: jsonObject});
                             window.nodeIdToIndexDict = {};
                             parseQueryJson(jsonObject);
 
@@ -198,11 +198,11 @@ class CypherQueryInput extends React.Component {
     };
 
     setLoading = (value) => {
-      this.setState( { isLoading: value });
+        this.setState({isLoading: value});
     };
 
     clearQueryResults = () => {
-      this.setState({ queryJson: null });
+        this.setState({queryJson: null});
     };
 
     handleClick = (event) => {
@@ -215,7 +215,7 @@ class CypherQueryInput extends React.Component {
 
     // Handler that listens for when keys are pressed
     handleKeyPress = (event) => {
-        if(event.key == 'Enter') {
+        if (event.key == 'Enter') {
             event.preventDefault();
             // TODO: add user input validation
             // Ask Neo4j to run the user input as a Cypher Query (currently assumes user input is a valid Cypher query and JavaScript string type)
@@ -249,9 +249,7 @@ class CypherQueryInput extends React.Component {
                     style={this.style.button}
                     onClick={this.handleClick}
                 />
-                {this.state.isLoading && this.state.queryJson === null ? <LinearProgress mode="indeterminate" /> : <br/>}
-
-                <QueryGraph data={[1,2,3]} width={960} height={700} options={{color: '#ff0000', margin: {top: 350, bottom: 0, left: 480, right: 0}}} />
+                {this.state.isLoading && this.state.queryJson === null ? <LinearProgress mode="indeterminate"/> : <br/>}
 
             </div>
         );
