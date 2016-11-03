@@ -409,7 +409,7 @@ webpackJsonp([1,2],[
 	
 	var _appRoutes2 = _interopRequireDefault(_appRoutes);
 	
-	var _store = __webpack_require__(550);
+	var _store = __webpack_require__(536);
 	
 	var _store2 = _interopRequireDefault(_store);
 	
@@ -425,7 +425,7 @@ webpackJsonp([1,2],[
 	  _createClass(Entrance, [{
 	    key: 'beforeStart',
 	    value: function beforeStart() {
-	      var injectTapEventPlugin = __webpack_require__(559);
+	      var injectTapEventPlugin = __webpack_require__(560);
 	      injectTapEventPlugin();
 	    }
 	  }, {
@@ -28977,7 +28977,7 @@ webpackJsonp([1,2],[
 	  var route = this[routeName.split('/').pop()];
 	
 	  var componentName = routeName.split('/').map(_lodash2.default.camelCase).join('/');
-	  components[routeName] = __webpack_require__(549)("./" + componentName + '.jsx').default;
+	  components[routeName] = __webpack_require__(559)("./" + componentName + '.jsx').default;
 	
 	  if (_lodash2.default.isPlainObject(route.routes)) {
 	    Object.keys(route.routes).map(function (subrouteName) {
@@ -64192,9 +64192,13 @@ webpackJsonp([1,2],[
 	
 	var _D3ForceDirectedGraph2 = _interopRequireDefault(_D3ForceDirectedGraph);
 	
-	var _CypherQueryInput = __webpack_require__(535);
+	var _CypherQueryInput = __webpack_require__(545);
 	
 	var _CypherQueryInput2 = _interopRequireDefault(_CypherQueryInput);
+	
+	var _Singleton = __webpack_require__(535);
+	
+	var _Singleton2 = _interopRequireDefault(_Singleton);
 	
 	var _jquery = __webpack_require__(532);
 	
@@ -64221,32 +64225,32 @@ webpackJsonp([1,2],[
 	        var _this = _possibleConstructorReturn(this, (Neo4jGraphQueryComponent.__proto__ || Object.getPrototypeOf(Neo4jGraphQueryComponent)).call(this, props));
 	
 	        _this.parseQueryJson = function (jsonObject) {
-	            window.queryJson = jsonObject;
-	            window.results = jsonObject.results[0];
-	            window.columns = results.columns;
-	            window.data = results.data;
-	            window.stats = results.stats;
-	            window.graphs = [];
-	            window.graphData = [];
-	            window.nodes = [];
-	            window.relationships = [];
-	            window.nodeIds = [];
-	            window.nodeIndexHash = {};
+	            _Singleton2.default.neo4jData.queryJson = jsonObject;
+	            _Singleton2.default.neo4jData.results = jsonObject.results[0];
+	            _Singleton2.default.neo4jData.columns = results.columns;
+	            _Singleton2.default.neo4jData.data = results.data;
+	            _Singleton2.default.neo4jData.stats = results.stats;
+	            _Singleton2.default.neo4jData.graphs = [];
+	            _Singleton2.default.neo4jData.graphData = [];
+	            _Singleton2.default.neo4jData.nodes = [];
+	            _Singleton2.default.neo4jData.relationships = [];
+	            _Singleton2.default.neo4jData.nodeIds = [];
+	            _Singleton2.default.neo4jData.nodeIndexHash = {};
 	            var nodes = [];
 	            var relationships = [];
 	
 	            // Fill the nodes and relationship arrays
 	            for (var i = 0; i < results.data.length; i++) {
-	                var data = window.data[i];
-	                window.graphs.push(data.graph);
-	                window.graphData.push(data);
+	                var data = _Singleton2.default.neo4jData.data[i];
+	                _Singleton2.default.neo4jData.graphs.push(data.graph);
+	                _Singleton2.default.neo4jData.graphData.push(data);
 	                var graph = data.graph;
-	                window.nodes.push(graph.nodes);
-	                window.nodes = _lodash2.default.flatten(window.nodes);
-	                window.relationships.push(graph.relationships);
-	                window.relationships = _lodash2.default.flatten(window.relationships);
-	                nodes = window.nodes;
-	                relationships = window.relationships;
+	                _Singleton2.default.neo4jData.nodes.push(graph.nodes);
+	                _Singleton2.default.neo4jData.nodes = _lodash2.default.flatten(_Singleton2.default.neo4jData.nodes);
+	                _Singleton2.default.neo4jData.relationships.push(graph.relationships);
+	                _Singleton2.default.neo4jData.relationships = _lodash2.default.flatten(_Singleton2.default.neo4jData.relationships);
+	                nodes = _Singleton2.default.neo4jData.nodes;
+	                relationships = _Singleton2.default.neo4jData.relationships;
 	            }
 	
 	            var d3_nodes = [];
@@ -64273,33 +64277,33 @@ webpackJsonp([1,2],[
 	                d3_nodes.push(d3_node);
 	            }
 	
-	            window.d3_nodes = d3_nodes;
+	            _Singleton2.default.neo4jData.d3_nodes = d3_nodes;
 	            for (var index = 0; index < d3_nodes.length; index++) {
 	                var key = d3_nodes[index].id;
 	                var value = index;
-	                window.nodeIndexHash[key] = value;
+	                _Singleton2.default.neo4jData.nodeIndexHash[key] = value;
 	            }
 	
 	            for (var j = 0; j < relationships.length; j++) {
 	                var relationship = relationships[j];
 	                var startNodeId = relationship.startNode;
 	                var endNodeId = relationship.endNode;
-	                var sourceIndex = window.nodeIndexHash[startNodeId];
-	                var targetIndex = window.nodeIndexHash[endNodeId];
+	                var sourceIndex = _Singleton2.default.neo4jData.nodeIndexHash[startNodeId];
+	                var targetIndex = _Singleton2.default.neo4jData.nodeIndexHash[endNodeId];
 	                var d3_link = {
 	                    'source': sourceIndex,
 	                    'target': targetIndex
 	                };
 	                d3_links.push(d3_link);
 	            }
-	            window.d3_links = d3_links;
-	            window.d3_graph = {
-	                'nodes': window.d3_nodes,
-	                'links': window.d3_links
+	            _Singleton2.default.neo4jData.d3_links = d3_links;
+	            _Singleton2.default.neo4jData.d3_graph = {
+	                'nodes': _Singleton2.default.neo4jData.d3_nodes,
+	                'links': _Singleton2.default.neo4jData.d3_links
 	            };
-	            console.prettyPrint(window.d3_graph);
-	            //TODO: Draw D3 graph with window.d3_graph as json input
-	            window.drawGraph = true;
+	            console.prettyPrint(_Singleton2.default.neo4jData.d3_graph);
+	            //TODO: Draw D3 graph with Singleton.neo4jData.d3_graph as json input
+	            _Singleton2.default.neo4jData.drawGraph = true;
 	        };
 	
 	        _this.setLoading = function (value) {
@@ -64313,7 +64317,7 @@ webpackJsonp([1,2],[
 	        _this.state = {
 	            isLoading: false,
 	            queryJson: null,
-	            showGraphComponent: false
+	            showD3Component: false
 	        };
 	
 	        _this.style = {
@@ -64382,6 +64386,14 @@ webpackJsonp([1,2],[
 	
 	var _reactD3Wrap2 = _interopRequireDefault(_reactD3Wrap);
 	
+	var _Singleton = __webpack_require__(535);
+	
+	var _Singleton2 = _interopRequireDefault(_Singleton);
+	
+	var _store = __webpack_require__(536);
+	
+	var _store2 = _interopRequireDefault(_store);
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -64389,15 +64401,16 @@ webpackJsonp([1,2],[
 	var D3ForceDirectedGraph = (0, _reactD3Wrap2.default)({
 	    initialize: function initialize(svg, data, options) {
 	        // Optional initialize method called once when component mounts
-	    },
-	    update: function update(svg, data, options) {
-	        // setup container, root svg element passed in along with data and options
-	        var svg = d3.select(svg).append('g').attr('transform', 'translate(' + options.margin.left + ', ' + options.margin.top + ')'),
-	            width = +svg.attr("width"),
-	            height = +svg.attr("height");
+	        _Singleton2.default.d3Data.svg = d3.select(svg).append('g').attr('transform', 'translate(' + options.margin.left + ', ' + options.margin.top + ')');
+	        _Singleton2.default.d3Data.width = +_Singleton2.default.d3Data.svg.attr("width");
+	        _Singleton2.default.d3Data.height = +_Singleton2.default.d3Data.svg.attr("height");
 	
 	        // continue your d3 implementation as usual...
-	        var labelColor = {
+	        _Singleton2.default.d3Data.simulation = d3.forceSimulation().force("link", d3.forceLink().id(function (d) {
+	            return d.index;
+	        })).force("charge", d3.forceManyBody()).force("center", d3.forceCenter(_Singleton2.default.d3Data.width / 2, _Singleton2.default.d3Data.height / 2));
+	
+	        _Singleton2.default.d3Data.labelColor = {
 	            "Plant": "#00b159",
 	            "Gene": "#00aedb",
 	            "Disease": "#d11141",
@@ -64406,83 +64419,159 @@ webpackJsonp([1,2],[
 	            "Pathway": "#f37735"
 	        };
 	
-	        var simulation = d3.forceSimulation().force("link", d3.forceLink().distance(30).strength(0.1)).force("charge", d3.forceManyBody()).force("center", d3.forceCenter(width / 2, height / 2));
+	        _store2.default.subscribe(function () {
+	            console.log("State changed");
+	            if (_store2.default.getState().app.drawForceDirectedGraph) {
+	                var ticked = function ticked() {
+	                    link.attr("x1", function (d) {
+	                        return d.source.x;
+	                    }).attr("y1", function (d) {
+	                        return d.source.y;
+	                    }).attr("x2", function (d) {
+	                        return d.target.x;
+	                    }).attr("y2", function (d) {
+	                        return d.target.y;
+	                    });
 	
-	        d3.json("https://s3-us-west-2.amazonaws.com/s.cdpn.io/362571/neo4j.json", function (error, graph) {
-	            if (error) throw error;
+	                    node.attr("cx", function (d) {
+	                        return d.x;
+	                    }).attr("cy", function (d) {
+	                        return d.y;
+	                    });
+	                };
 	
-	            var nodes = graph.nodes,
-	                nodeById = d3.map(nodes, function (d) {
-	                return d.index;
-	            }),
-	                links = graph.links,
-	                bilinks = [];
+	                var dragstarted = function dragstarted(d) {
+	                    if (!d3.event.active) _Singleton2.default.d3Data.simulation.alphaTarget(0.3).restart();
+	                    d.fx = d.x;
+	                    d.fy = d.y;
+	                };
 	
-	            links.forEach(function (link) {
-	                var s = link.source = nodeById.get(link.source),
-	                    t = link.target = nodeById.get(link.target),
-	                    i = {}; // intermediate node
-	                nodes.push(i);
-	                links.push({ source: s, target: i }, { source: i, target: t });
-	                bilinks.push([s, i, t]);
-	            });
+	                var dragged = function dragged(d) {
+	                    d.fx = d3.event.x;
+	                    d.fy = d3.event.y;
+	                };
 	
-	            var link = svg.selectAll(".link").data(bilinks).enter().append("path").attr("class", "link").attr("fill", "none").attr("stroke", "#bbb").attr("opacity", "0.5").attr("stroke-width", "1.5px");
+	                var dragended = function dragended(d) {
+	                    if (!d3.event.active) _Singleton2.default.d3Data.simulation.alphaTarget(0);
+	                    d.fx = null;
+	                    d.fy = null;
+	                };
 	
-	            var node = svg.selectAll(".node").data(nodes.filter(function (d) {
-	                return d.label;
-	            })).enter().append("circle").attr("class", "node").attr("fill", function (d) {
-	                return labelColor[d.label];
-	            }).attr("stroke", "#fff").attr("stroke-width", "1.5px").attr("r", 10).attr("opacity", "0.8").call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+	                console.log("d3 should draw");
+	                var graph = _Singleton2.default.neo4jData.d3_graph;
 	
-	            node.append("title").text(function (d) {
-	                return d.label;
-	            });
-	
-	            simulation.nodes(nodes).on("tick", ticked);
-	
-	            simulation.force("link").links(links);
-	
-	            function ticked() {
-	                link.attr("x1", function (d) {
-	                    return d.source.x;
-	                }).attr("y1", function (d) {
-	                    return d.source.y;
-	                }).attr("x2", function (d) {
-	                    return d.target.x;
-	                }).attr("y2", function (d) {
-	                    return d.target.y;
+	                var link = _Singleton2.default.d3Data.svg.append("g").attr("class", "links").selectAll("line").data(graph.links).enter().append("line").attr("stroke", "#999").attr("stroke-opacity", "0.6").attr("stroke-width", function (d) {
+	                    return 1.0; //Math.sqrt(d.value);
 	                });
 	
-	                node.attr("cx", function (d) {
-	                    return d.x;
-	                }).attr("cy", function (d) {
-	                    return d.y;
+	                var node = _Singleton2.default.d3Data.svg.append("g").attr("class", "nodes").selectAll("circle").data(graph.nodes).enter().append("circle").attr("r", 10).attr("fill", function (d) {
+	                    return _Singleton2.default.d3Data.labelColor[d.label];
+	                }).attr("stroke", "#fff").attr("stroke-width", "1.5px").call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+	
+	                node.append("title").text(function (d) {
+	                    return d.label;
 	                });
+	
+	                _Singleton2.default.d3Data.simulation.nodes(graph.nodes).on("tick", ticked);
+	
+	                _Singleton2.default.d3Data.simulation.force("link").links(graph.links);
 	            }
 	        });
+	    },
+	    update: function update(svg, data, options) {
+	        // setup container, root svg element passed in along with data and options
 	
-	        function positionLink(d) {
-	            return "M" + d[0].x + "," + d[0].y + "S" + d[1].x + "," + d[1].y + " " + d[2].x + "," + d[2].y;
-	        }
+	        // Singleton.d3Data.svg = d3.select(svg)
+	        //     .append('g')
+	        //     .attr('transform', `translate(${options.margin.left}, ${options.margin.top})`)
 	
-	        function positionNode(d) {
-	            return "translate(" + d.x + "," + d.y + ")";
-	        }
+	        // store.subscribe( function() {
+	        //     if(store.getState().app.drawForceDirectedGraph) {
+	        //         d3.json(Singleton.neo4jData.d3_graph, function (error, graph) {
+	        //             if (error) throw error;
+	        //
+	        //             var link = Singleton.d3Data.svg.append("g")
+	        //                 .attr("class", "links")
+	        //                 .selectAll("line")
+	        //                 .data(graph.links)
+	        //                 .enter().append("line")
+	        //                 .attr("stroke", "#999")
+	        //                 .attr("stroke-opacity", "0.6")
+	        //                 .attr("stroke-width", function (d) {
+	        //                     return 1.0; //Math.sqrt(d.value);
+	        //                 });
+	        //
+	        //             var node =  Singleton.d3Data.svg.append("g")
+	        //                 .attr("class", "nodes")
+	        //                 .selectAll("circle")
+	        //                 .data(graph.nodes)
+	        //                 .enter().append("circle")
+	        //                 .attr("r", 10).attr("fill", function (d) {
+	        //                     return  Singleton.d3Data.labelColor[d.label];
+	        //                 })
+	        //                 .attr("stroke", "#fff")
+	        //                 .attr("stroke-width", "1.5px")
+	        //                 .call(d3.drag()
+	        //                     .on("start", dragstarted)
+	        //                     .on("drag", dragged)
+	        //                     .on("end", dragended));
+	        //
+	        //             node.append("title")
+	        //                 .text(function (d) {
+	        //                     return d.label;
+	        //                 });
+	        //
+	        //             Singleton.d3Data.simulation
+	        //                 .nodes(graph.nodes)
+	        //                 .on("tick", ticked);
+	        //
+	        //             Singleton.d3Data.simulation.force("link")
+	        //                 .links(graph.links);
+	        //
+	        //             function ticked() {
+	        //                 link
+	        //                     .attr("x1", function (d) {
+	        //                         return d.source.x;
+	        //                     })
+	        //                     .attr("y1", function (d) {
+	        //                         return d.source.y;
+	        //                     })
+	        //                     .attr("x2", function (d) {
+	        //                         return d.target.x;
+	        //                     })
+	        //                     .attr("y2", function (d) {
+	        //                         return d.target.y;
+	        //                     });
+	        //
+	        //                 node
+	        //                     .attr("cx", function (d) {
+	        //                         return d.x;
+	        //                     })
+	        //                     .attr("cy", function (d) {
+	        //                         return d.y;
+	        //                     });
+	        //             }
+	        //         });
+	        //     }
 	
-	        function dragstarted(d) {
-	            if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-	            d.fx = d.x, d.fy = d.y;
-	        }
+	        // function dragstarted(d) {
+	        //     if (!d3.event.active)  Singleton.d3Data.simulation.alphaTarget(0.3).restart();
+	        //     d.fx = d.x;
+	        //     d.fy = d.y;
+	        // }
+	        //
+	        // function dragged(d) {
+	        //     d.fx = d3.event.x;
+	        //     d.fy = d3.event.y;
+	        // }
+	        //
+	        // function dragended(d) {
+	        //     if (!d3.event.active)  Singleton.d3Data.simulation.alphaTarget(0);
+	        //     d.fx = null;
+	        //     d.fy = null;
+	        // }
+	        // });
 	
-	        function dragged(d) {
-	            d.fx = d3.event.x, d.fy = d3.event.y;
-	        }
-	
-	        function dragended(d) {
-	            if (!d3.event.active) simulation.alphaTarget(0);
-	            d.fx = null, d.fy = null;
-	        }
 	    },
 	    destroy: function destroy() {
 	        // Optional clean up when a component is being unmounted...
@@ -91122,6 +91211,691 @@ webpackJsonp([1,2],[
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 	
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var instance = null;
+	
+	var Singleton = function Singleton() {
+	    _classCallCheck(this, Singleton);
+	
+	    if (!instance) {
+	        instance = this;
+	        this.time = new Date();
+	        this.globalData = {};
+	        this.neo4jData = {};
+	        this.d3Data = {};
+	        return instance;
+	    }
+	};
+	
+	exports.default = Singleton = new Singleton();
+	
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Singleton.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 536 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+	
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _redux = __webpack_require__(253);
+	
+	var _reduxLogger = __webpack_require__(537);
+	
+	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
+	
+	var _reduxThunk = __webpack_require__(538);
+	
+	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+	
+	var _reduxPromiseMiddleware = __webpack_require__(539);
+	
+	var _reduxPromiseMiddleware2 = _interopRequireDefault(_reduxPromiseMiddleware);
+	
+	var _reducers = __webpack_require__(541);
+	
+	var _reducers2 = _interopRequireDefault(_reducers);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var middleware = (0, _redux.applyMiddleware)((0, _reduxPromiseMiddleware2.default)(), _reduxThunk2.default);
+	
+	var store = (0, _redux.createStore)(_reducers2.default, middleware);
+	
+	exports.default = store;
+	
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "store.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 537 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+	
+	var repeat = function repeat(str, times) {
+	  return new Array(times + 1).join(str);
+	};
+	var pad = function pad(num, maxLength) {
+	  return repeat("0", maxLength - num.toString().length) + num;
+	};
+	var formatTime = function formatTime(time) {
+	  return "@ " + pad(time.getHours(), 2) + ":" + pad(time.getMinutes(), 2) + ":" + pad(time.getSeconds(), 2) + "." + pad(time.getMilliseconds(), 3);
+	};
+	
+	// Use the new performance api to get better precision if available
+	var timer = typeof performance !== "undefined" && typeof performance.now === "function" ? performance : Date;
+	
+	/**
+	 * parse the level option of createLogger
+	 *
+	 * @property {string | function | object} level - console[level]
+	 * @property {object} action
+	 * @property {array} payload
+	 * @property {string} type
+	 */
+	
+	function getLogLevel(level, action, payload, type) {
+	  switch (typeof level === "undefined" ? "undefined" : _typeof(level)) {
+	    case "object":
+	      return typeof level[type] === "function" ? level[type].apply(level, _toConsumableArray(payload)) : level[type];
+	    case "function":
+	      return level(action);
+	    default:
+	      return level;
+	  }
+	}
+	
+	/**
+	 * Creates logger with followed options
+	 *
+	 * @namespace
+	 * @property {object} options - options for logger
+	 * @property {string | function | object} options.level - console[level]
+	 * @property {boolean} options.duration - print duration of each action?
+	 * @property {boolean} options.timestamp - print timestamp with each action?
+	 * @property {object} options.colors - custom colors
+	 * @property {object} options.logger - implementation of the `console` API
+	 * @property {boolean} options.logErrors - should errors in action execution be caught, logged, and re-thrown?
+	 * @property {boolean} options.collapsed - is group collapsed?
+	 * @property {boolean} options.predicate - condition which resolves logger behavior
+	 * @property {function} options.stateTransformer - transform state before print
+	 * @property {function} options.actionTransformer - transform action before print
+	 * @property {function} options.errorTransformer - transform error before print
+	 */
+	
+	function createLogger() {
+	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var _options$level = options.level;
+	  var level = _options$level === undefined ? "log" : _options$level;
+	  var _options$logger = options.logger;
+	  var logger = _options$logger === undefined ? console : _options$logger;
+	  var _options$logErrors = options.logErrors;
+	  var logErrors = _options$logErrors === undefined ? true : _options$logErrors;
+	  var collapsed = options.collapsed;
+	  var predicate = options.predicate;
+	  var _options$duration = options.duration;
+	  var duration = _options$duration === undefined ? false : _options$duration;
+	  var _options$timestamp = options.timestamp;
+	  var timestamp = _options$timestamp === undefined ? true : _options$timestamp;
+	  var transformer = options.transformer;
+	  var _options$stateTransfo = options.stateTransformer;
+	  var // deprecated
+	  stateTransformer = _options$stateTransfo === undefined ? function (state) {
+	    return state;
+	  } : _options$stateTransfo;
+	  var _options$actionTransf = options.actionTransformer;
+	  var actionTransformer = _options$actionTransf === undefined ? function (actn) {
+	    return actn;
+	  } : _options$actionTransf;
+	  var _options$errorTransfo = options.errorTransformer;
+	  var errorTransformer = _options$errorTransfo === undefined ? function (error) {
+	    return error;
+	  } : _options$errorTransfo;
+	  var _options$colors = options.colors;
+	  var colors = _options$colors === undefined ? {
+	    title: function title() {
+	      return "#000000";
+	    },
+	    prevState: function prevState() {
+	      return "#9E9E9E";
+	    },
+	    action: function action() {
+	      return "#03A9F4";
+	    },
+	    nextState: function nextState() {
+	      return "#4CAF50";
+	    },
+	    error: function error() {
+	      return "#F20404";
+	    }
+	  } : _options$colors;
+	
+	  // exit if console undefined
+	
+	  if (typeof logger === "undefined") {
+	    return function () {
+	      return function (next) {
+	        return function (action) {
+	          return next(action);
+	        };
+	      };
+	    };
+	  }
+	
+	  if (transformer) {
+	    console.error("Option 'transformer' is deprecated, use stateTransformer instead");
+	  }
+	
+	  var logBuffer = [];
+	  function printBuffer() {
+	    logBuffer.forEach(function (logEntry, key) {
+	      var started = logEntry.started;
+	      var startedTime = logEntry.startedTime;
+	      var action = logEntry.action;
+	      var prevState = logEntry.prevState;
+	      var error = logEntry.error;
+	      var took = logEntry.took;
+	      var nextState = logEntry.nextState;
+	
+	      var nextEntry = logBuffer[key + 1];
+	      if (nextEntry) {
+	        nextState = nextEntry.prevState;
+	        took = nextEntry.started - started;
+	      }
+	      // message
+	      var formattedAction = actionTransformer(action);
+	      var isCollapsed = typeof collapsed === "function" ? collapsed(function () {
+	        return nextState;
+	      }, action) : collapsed;
+	
+	      var formattedTime = formatTime(startedTime);
+	      var titleCSS = colors.title ? "color: " + colors.title(formattedAction) + ";" : null;
+	      var title = "action " + (timestamp ? formattedTime : "") + " " + formattedAction.type + " " + (duration ? "(in " + took.toFixed(2) + " ms)" : "");
+	
+	      // render
+	      try {
+	        if (isCollapsed) {
+	          if (colors.title) logger.groupCollapsed("%c " + title, titleCSS);else logger.groupCollapsed(title);
+	        } else {
+	          if (colors.title) logger.group("%c " + title, titleCSS);else logger.group(title);
+	        }
+	      } catch (e) {
+	        logger.log(title);
+	      }
+	
+	      var prevStateLevel = getLogLevel(level, formattedAction, [prevState], "prevState");
+	      var actionLevel = getLogLevel(level, formattedAction, [formattedAction], "action");
+	      var errorLevel = getLogLevel(level, formattedAction, [error, prevState], "error");
+	      var nextStateLevel = getLogLevel(level, formattedAction, [nextState], "nextState");
+	
+	      if (prevStateLevel) {
+	        if (colors.prevState) logger[prevStateLevel]("%c prev state", "color: " + colors.prevState(prevState) + "; font-weight: bold", prevState);else logger[prevStateLevel]("prev state", prevState);
+	      }
+	
+	      if (actionLevel) {
+	        if (colors.action) logger[actionLevel]("%c action", "color: " + colors.action(formattedAction) + "; font-weight: bold", formattedAction);else logger[actionLevel]("action", formattedAction);
+	      }
+	
+	      if (error && errorLevel) {
+	        if (colors.error) logger[errorLevel]("%c error", "color: " + colors.error(error, prevState) + "; font-weight: bold", error);else logger[errorLevel]("error", error);
+	      }
+	
+	      if (nextStateLevel) {
+	        if (colors.nextState) logger[nextStateLevel]("%c next state", "color: " + colors.nextState(nextState) + "; font-weight: bold", nextState);else logger[nextStateLevel]("next state", nextState);
+	      }
+	
+	      try {
+	        logger.groupEnd();
+	      } catch (e) {
+	        logger.log("—— log end ——");
+	      }
+	    });
+	    logBuffer.length = 0;
+	  }
+	
+	  return function (_ref) {
+	    var getState = _ref.getState;
+	    return function (next) {
+	      return function (action) {
+	        // exit early if predicate function returns false
+	        if (typeof predicate === "function" && !predicate(getState, action)) {
+	          return next(action);
+	        }
+	
+	        var logEntry = {};
+	        logBuffer.push(logEntry);
+	
+	        logEntry.started = timer.now();
+	        logEntry.startedTime = new Date();
+	        logEntry.prevState = stateTransformer(getState());
+	        logEntry.action = action;
+	
+	        var returnedValue = undefined;
+	        if (logErrors) {
+	          try {
+	            returnedValue = next(action);
+	          } catch (e) {
+	            logEntry.error = errorTransformer(e);
+	          }
+	        } else {
+	          returnedValue = next(action);
+	        }
+	
+	        logEntry.took = timer.now() - logEntry.started;
+	        logEntry.nextState = stateTransformer(getState());
+	
+	        printBuffer();
+	
+	        if (logEntry.error) throw logEntry.error;
+	        return returnedValue;
+	      };
+	    };
+	  };
+	}
+	
+	module.exports = createLogger;
+
+/***/ },
+/* 538 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	function createThunkMiddleware(extraArgument) {
+	  return function (_ref) {
+	    var dispatch = _ref.dispatch;
+	    var getState = _ref.getState;
+	    return function (next) {
+	      return function (action) {
+	        if (typeof action === 'function') {
+	          return action(dispatch, getState, extraArgument);
+	        }
+	
+	        return next(action);
+	      };
+	    };
+	  };
+	}
+	
+	var thunk = createThunkMiddleware();
+	thunk.withExtraArgument = createThunkMiddleware;
+	
+	exports['default'] = thunk;
+
+/***/ },
+/* 539 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+	
+	exports.default = promiseMiddleware;
+	
+	var _isPromise = __webpack_require__(540);
+	
+	var _isPromise2 = _interopRequireDefault(_isPromise);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var defaultTypes = ['PENDING', 'FULFILLED', 'REJECTED'];
+	
+	/**
+	 * @function promiseMiddleware
+	 * @description
+	 * @returns {function} thunk
+	 */
+	function promiseMiddleware() {
+	  var config = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	
+	  var promiseTypeSuffixes = config.promiseTypeSuffixes || defaultTypes;
+	
+	  return function (ref) {
+	    var dispatch = ref.dispatch;
+	
+	
+	    return function (next) {
+	      return function (action) {
+	        if (action.payload) {
+	          if (!(0, _isPromise2.default)(action.payload) && !(0, _isPromise2.default)(action.payload.promise)) {
+	            return next(action);
+	          }
+	        } else {
+	          return next(action);
+	        }
+	
+	        // Deconstruct the properties of the original action object to constants
+	        var type = action.type;
+	        var payload = action.payload;
+	        var meta = action.meta;
+	
+	        // Assign values for promise type suffixes
+	
+	        var _promiseTypeSuffixes = _slicedToArray(promiseTypeSuffixes, 3);
+	
+	        var PENDING = _promiseTypeSuffixes[0];
+	        var FULFILLED = _promiseTypeSuffixes[1];
+	        var REJECTED = _promiseTypeSuffixes[2];
+	
+	        /**
+	         * @function getAction
+	         * @description Utility function for creating a rejected or fulfilled
+	         * flux standard action object.
+	         * @param {boolean} Is the action rejected?
+	         * @returns {object} action
+	         */
+	
+	        var getAction = function getAction(newPayload, isRejected) {
+	          return _extends({
+	            type: type + '_' + (isRejected ? REJECTED : FULFILLED)
+	          }, newPayload ? {
+	            payload: newPayload
+	          } : {}, !!meta ? { meta: meta } : {}, isRejected ? {
+	            error: true
+	          } : {});
+	        };
+	
+	        /**
+	         * Assign values for promise and data variables. In the case the payload
+	         * is an object with a `promise` and `data` property, the values of those
+	         * properties will be used. In the case the payload is a promise, the
+	         * value of the payload will be used and data will be null.
+	         */
+	        var promise = void 0;
+	        var data = void 0;
+	
+	        if (!(0, _isPromise2.default)(action.payload) && _typeof(action.payload) === 'object') {
+	          promise = payload.promise;
+	          data = payload.data;
+	        } else {
+	          promise = payload;
+	          data = null;
+	        }
+	
+	        /**
+	         * First, dispatch the pending action. This flux standard action object
+	         * describes the pending state of a promise and will include any data
+	         * (for optimistic updates) and/or meta from the original action.
+	         */
+	        next(_extends({
+	          type: type + '_' + PENDING
+	        }, !!data ? { payload: data } : {}, !!meta ? { meta: meta } : {}));
+	
+	        /*
+	         * @function handleReject
+	         * @description Dispatch the rejected action and return
+	         * an error object. The error object is the original error
+	         * that was thrown. The user of the library is responsible for
+	         * best practices in ensure that they are throwing an Error object.
+	         * @params reason The reason the promise was rejected
+	         * @returns {object}
+	         */
+	        var handleReject = function handleReject(reason) {
+	          var rejectedAction = getAction(reason, true);
+	          dispatch(rejectedAction);
+	          throw reason;
+	        };
+	
+	        /*
+	         * @function handleFulfill
+	         * @description Dispatch the fulfilled action and
+	         * return the success object. The success object should
+	         * contain the value and the dispatched action.
+	         * @param value The value the promise was resloved with
+	         * @returns {object}
+	         */
+	        var handleFulfill = function handleFulfill() {
+	          var value = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+	
+	          var resolvedAction = getAction(value, false);
+	          dispatch(resolvedAction);
+	
+	          return { value: value, action: resolvedAction };
+	        };
+	
+	        /**
+	         * Second, dispatch a rejected or fulfilled action. This flux standard
+	         * action object will describe the resolved state of the promise. In
+	         * the case of a rejected promise, it will include an `error` property.
+	         *
+	         * In order to allow proper chaining of actions using `then`, a new
+	         * promise is constructed and returned. This promise will resolve
+	         * with two properties: (1) the value (if fulfilled) or reason
+	         * (if rejected) and (2) the flux standard action.
+	         *
+	         * Rejected object:
+	         * {
+	         *   reason: ...
+	         *   action: {
+	         *     error: true,
+	         *     type: 'ACTION_REJECTED',
+	         *     payload: ...
+	         *   }
+	         * }
+	         *
+	         * Fulfilled object:
+	         * {
+	         *   value: ...
+	         *   action: {
+	         *     type: 'ACTION_FULFILLED',
+	         *     payload: ...
+	         *   }
+	         * }
+	         */
+	        return promise.then(handleFulfill, handleReject);
+	      };
+	    };
+	  };
+	}
+
+/***/ },
+/* 540 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
+	exports.default = isPromise;
+	function isPromise(value) {
+	  if (value !== null && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
+	    return value && typeof value.then === 'function';
+	  }
+	
+	  return false;
+	}
+
+/***/ },
+/* 541 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _redux = __webpack_require__(253);
+	
+	var _redux2 = __webpack_require__(542);
+	
+	var _redux3 = _interopRequireDefault(_redux2);
+	
+	var _appReducer = __webpack_require__(543);
+	
+	var _appReducer2 = _interopRequireDefault(_appReducer);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var components = {};
+	
+	function requireReducers(reducerName) {
+	
+	  var componentName = _.camelCase(reducerName) + "Reducer";
+	  components[reducerName] = __webpack_require__(544)("./" + componentName + '.js').default;
+	};
+	
+	_redux3.default.reducers.map(function (reducer) {
+	  requireReducers(reducer);
+	});
+	
+	exports.default = (0, _redux.combineReducers)(components);
+	
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "index.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 542 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		"reducers": [
+			"app"
+		]
+	};
+
+/***/ },
+/* 543 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+	
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	exports.default = reducer;
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	function reducer() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? {
+	    fetching: false,
+	    fetched: false,
+	    test: [],
+	    error: null,
+	    cypherQuerying: false,
+	    drawForceDirectedGraph: false
+	  } : arguments[0];
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	
+	    case "CYPHER_QUERY_START":
+	      {
+	        return _extends({}, state, {
+	          cypherQuerying: true
+	        });
+	        break;
+	      }
+	    case "CYPHER_QUERY_END":
+	      {
+	        return _extends({}, state, {
+	          cypherQuerying: false
+	        });
+	        break;
+	      }
+	    case "DRAW_FORCE_DIRECTED_GRAPH":
+	      {
+	        return _extends({}, state, {
+	          drawForceDirectedGraph: true
+	        });
+	        break;
+	      }
+	    case "FETCH_TEST_PENDING":
+	      {
+	        return _extends({}, state, {
+	          fetching: true
+	        });
+	        break;
+	      }
+	    case "FETCH_TEST_REJECTED":
+	      {
+	        return _extends({}, state, {
+	          fetching: false,
+	          error: action.payload
+	        });
+	        break;
+	      }
+	    case "FETCH_TEST_FULFILLED":
+	      {
+	        return _extends({}, state, {
+	          fetching: false,
+	          fetched: false,
+	          test: [].concat(_toConsumableArray(state.test))
+	        });
+	        break;
+	      }
+	
+	  }
+	
+	  return state;
+	}
+	
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "appReducer.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ },
+/* 544 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var map = {
+		"./appReducer.js": 543,
+		"./index.js": 541
+	};
+	function webpackContext(req) {
+		return __webpack_require__(webpackContextResolve(req));
+	};
+	function webpackContextResolve(req) {
+		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
+	};
+	webpackContext.keys = function webpackContextKeys() {
+		return Object.keys(map);
+	};
+	webpackContext.resolve = webpackContextResolve;
+	module.exports = webpackContext;
+	webpackContext.id = 544;
+
+
+/***/ },
+/* 545 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+	
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -91134,19 +91908,23 @@ webpackJsonp([1,2],[
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _TextField = __webpack_require__(536);
+	var _TextField = __webpack_require__(546);
 	
 	var _TextField2 = _interopRequireDefault(_TextField);
 	
-	var _LinearProgress = __webpack_require__(542);
+	var _LinearProgress = __webpack_require__(552);
 	
 	var _LinearProgress2 = _interopRequireDefault(_LinearProgress);
+	
+	var _Singleton = __webpack_require__(535);
+	
+	var _Singleton2 = _interopRequireDefault(_Singleton);
 	
 	var _D3ForceDirectedGraph = __webpack_require__(531);
 	
 	var _D3ForceDirectedGraph2 = _interopRequireDefault(_D3ForceDirectedGraph);
 	
-	var _RaisedButton = __webpack_require__(544);
+	var _RaisedButton = __webpack_require__(554);
 	
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 	
@@ -91154,7 +91932,7 @@ webpackJsonp([1,2],[
 	
 	var _FontIcon2 = _interopRequireDefault(_FontIcon);
 	
-	var _FlatButton = __webpack_require__(546);
+	var _FlatButton = __webpack_require__(556);
 	
 	var _FlatButton2 = _interopRequireDefault(_FlatButton);
 	
@@ -91170,6 +91948,10 @@ webpackJsonp([1,2],[
 	
 	var _UI2 = _interopRequireDefault(_UI);
 	
+	var _store = __webpack_require__(536);
+	
+	var _store2 = _interopRequireDefault(_store);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -91184,6 +91966,7 @@ webpackJsonp([1,2],[
 	    function CypherQueryInput(props) {
 	        _classCallCheck(this, CypherQueryInput);
 	
+	        // Log the initial state
 	        var _this = _possibleConstructorReturn(this, (CypherQueryInput.__proto__ || Object.getPrototypeOf(CypherQueryInput)).call(this, props));
 	
 	        _this.handleChange = function (event) {
@@ -91193,6 +91976,25 @@ webpackJsonp([1,2],[
 	        };
 	
 	        _this.runCypherQuery = function (userInput) {
+	            var that = _this;
+	            _Singleton2.default.neo4jData.queryJson = null;
+	            _Singleton2.default.neo4jData.results = null;
+	            _Singleton2.default.neo4jData.columns = null;
+	            _Singleton2.default.neo4jData.data = null;
+	            _Singleton2.default.neo4jData.stats = null;
+	            _Singleton2.default.neo4jData.graph = {};
+	            _Singleton2.default.neo4jData.graphs = [];
+	            _Singleton2.default.neo4jData.graphData = [];
+	            _Singleton2.default.neo4jData.nodes = [];
+	            _Singleton2.default.neo4jData.relationships = [];
+	            _Singleton2.default.neo4jData.nodeIds = [];
+	            _Singleton2.default.neo4jData.nodeIndexHash = {};
+	            _Singleton2.default.neo4jData.nodes = [];
+	            _Singleton2.default.neo4jData.relationships = [];
+	            _Singleton2.default.neo4jData.d3_nodes = [];
+	            _Singleton2.default.neo4jData.d3_links = [];
+	            _Singleton2.default.neo4jData.d3_graph = {};
+	
 	            var jsonifyCypherStatement = function jsonifyCypherStatement(cypherQuery) {
 	                var jsonData = JSON.stringify({
 	                    "statements": [{
@@ -91207,39 +92009,26 @@ webpackJsonp([1,2],[
 	
 	            // Sorry to my future self or whoever reads this for how ugly the parsing code is, but it works.
 	            var parseQueryJson = function parseQueryJson(jsonObject) {
-	                window.queryJson = jsonObject;
-	                window.results = jsonObject.results[0];
-	                window.columns = results.columns;
-	                window.data = results.data;
-	                window.stats = results.stats;
-	                window.graphs = [];
-	                window.graphData = [];
-	                window.nodes = [];
-	                window.relationships = [];
-	                window.nodeIds = [];
-	                window.nodeIndexHash = {};
-	                var nodes = [];
-	                var relationships = [];
+	                _Singleton2.default.neo4jData.queryJson = jsonObject;
+	                _Singleton2.default.neo4jData.results = jsonObject.results[0];
+	                _Singleton2.default.neo4jData.columns = _Singleton2.default.neo4jData.results.columns;
+	                _Singleton2.default.neo4jData.data = _Singleton2.default.neo4jData.results.data;
+	                _Singleton2.default.neo4jData.stats = _Singleton2.default.neo4jData.results.stats;
 	
 	                // Fill the nodes and relationship arrays
-	                for (var i = 0; i < results.data.length; i++) {
-	                    var data = window.data[i];
-	                    window.graphs.push(data.graph);
-	                    window.graphData.push(data);
-	                    var graph = data.graph;
-	                    window.nodes.push(graph.nodes);
-	                    window.nodes = _lodash2.default.flatten(window.nodes);
-	                    window.relationships.push(graph.relationships);
-	                    window.relationships = _lodash2.default.flatten(window.relationships);
-	                    nodes = window.nodes;
-	                    relationships = window.relationships;
+	                for (var i = 0; i < _Singleton2.default.neo4jData.results.data.length; i++) {
+	                    var _data = _Singleton2.default.neo4jData.data[i];
+	                    _Singleton2.default.neo4jData.graphs.push(_data.graph);
+	                    _Singleton2.default.neo4jData.graphData.push(_data);
+	                    var _graph = _data.graph;
+	                    _Singleton2.default.neo4jData.nodes.push(_graph.nodes);
+	                    _Singleton2.default.neo4jData.nodes = _lodash2.default.flatten(_Singleton2.default.neo4jData.nodes);
+	                    _Singleton2.default.neo4jData.relationships.push(_graph.relationships);
+	                    _Singleton2.default.neo4jData.relationships = _lodash2.default.flatten(_Singleton2.default.neo4jData.relationships);
 	                }
 	
-	                var d3_nodes = [];
-	                var d3_links = [];
-	
-	                for (var i2 = 0; i2 < nodes.length; i2++) {
-	                    var node = nodes[i2];
+	                for (var i2 = 0; i2 < _Singleton2.default.neo4jData.nodes.length; i2++) {
+	                    var node = _Singleton2.default.neo4jData.nodes[i2];
 	                    var id = node.id;
 	                    var label = node.labels[0];
 	                    var properties = node.properties;
@@ -91256,36 +92045,40 @@ webpackJsonp([1,2],[
 	                    d3_node['source'] = source;
 	                    d3_node['sourceId'] = sourceId;
 	                    d3_node['synonyms'] = synonyms;
-	                    d3_nodes.push(d3_node);
+	                    _Singleton2.default.neo4jData.d3_nodes.push(d3_node);
 	                }
 	
-	                window.d3_nodes = d3_nodes;
-	                for (var index = 0; index < d3_nodes.length; index++) {
-	                    var key = d3_nodes[index].id;
+	                for (var index = 0; index < _Singleton2.default.neo4jData.d3_nodes.length; index++) {
+	                    var key = _Singleton2.default.neo4jData.d3_nodes[index].id;
 	                    var value = index;
-	                    window.nodeIndexHash[key] = value;
+	                    _Singleton2.default.neo4jData.nodeIndexHash[key] = value;
 	                }
 	
-	                for (var j = 0; j < relationships.length; j++) {
-	                    var relationship = relationships[j];
+	                for (var j = 0; j < _Singleton2.default.neo4jData.relationships.length; j++) {
+	                    var relationship = _Singleton2.default.neo4jData.relationships[j];
 	                    var startNodeId = relationship.startNode;
 	                    var endNodeId = relationship.endNode;
-	                    var sourceIndex = window.nodeIndexHash[startNodeId];
-	                    var targetIndex = window.nodeIndexHash[endNodeId];
+	                    var sourceIndex = _Singleton2.default.neo4jData.nodeIndexHash[startNodeId];
+	                    var targetIndex = _Singleton2.default.neo4jData.nodeIndexHash[endNodeId];
 	                    var d3_link = {
 	                        'source': sourceIndex,
 	                        'target': targetIndex
 	                    };
-	                    d3_links.push(d3_link);
+	                    _Singleton2.default.neo4jData.d3_links.push(d3_link);
 	                }
-	                window.d3_links = d3_links;
-	                window.d3_graph = {
-	                    'nodes': window.d3_nodes,
-	                    'links': window.d3_links
+	                _Singleton2.default.neo4jData.d3_graph = {
+	                    'nodes': _Singleton2.default.neo4jData.d3_nodes,
+	                    'links': _Singleton2.default.neo4jData.d3_links
 	                };
-	                console.prettyPrint(window.d3_graph);
-	                //TODO: Draw D3 graph with window.d3_graph as json input
-	                window.drawGraph = true;
+	                //console.log("D3 Graph:");
+	                //console.prettyPrint(d3_graph);
+	                //TODO: Draw D3 graph with d3_graph as json input
+	                that.setState({ drawD3Component: true });
+	                // Dispatch an action
+	                _store2.default.dispatch({
+	                    type: 'DRAW_FORCE_DIRECTED_GRAPH'
+	                });
+	                return _Singleton2.default.neo4jData.d3_graph;
 	            };
 	
 	            // POST request that sends the JSON encoded Cypher query (user input) to Neo4j
@@ -91313,19 +92106,26 @@ webpackJsonp([1,2],[
 	                            contentType: 'application/json;charset=utf-8',
 	                            cache: false,
 	                            success: function (jsonObject) {
+	                                // Dispatch an action
+	                                _store2.default.dispatch({
+	                                    type: 'CYPHER_QUERY_END'
+	                                });
 	                                console.log('Cypher Query results:');
-	                                console.prettyPrint(jsonObject);
+	                                //console.prettyPrint(jsonObject);
 	                                this.setState({ queryJson: jsonObject });
-	                                window.nodeIdToIndexDict = {};
-	                                parseQueryJson(jsonObject);
+	                                _Singleton2.default.neo4jData.graph = parseQueryJson(jsonObject);
+	                                console.log(_Singleton2.default.neo4jData.graph);
 	                            }.bind(this),
 	                            error: function (xhr, status, err) {
+	                                // Dispatch an action
+	                                _store2.default.dispatch({
+	                                    type: 'CYPHER_QUERY_END'
+	                                });
 	                                console.log('Error attempting to POST this data:');
 	                                console.prettyPrint(jsonData);
 	                                console.error(this.commitUrl, status, err.toString());
 	                                this.setState({ queryJson: jsonObject });
-	                                window.nodeIdToIndexDict = {};
-	                                parseQueryJson(jsonObject);
+	                                //var graph = parseQueryJson(jsonObject);
 	                            }.bind(this)
 	                        });
 	                    }.bind(this),
@@ -91335,6 +92135,7 @@ webpackJsonp([1,2],[
 	                });
 	            };
 	            postCypherJson.call(_this);
+	            return _Singleton2.default.neo4jData.graph;
 	        };
 	
 	        _this.setLoading = function (value) {
@@ -91347,32 +92148,61 @@ webpackJsonp([1,2],[
 	
 	        _this.handleClick = function (event) {
 	            // TODO: add user input validation
+	
 	            // Ask Neo4j to run the user input as a Cypher Query (currently assumes user input is a valid Cypher query and JavaScript string type)
 	            _this.clearQueryResults();
 	            _this.setLoading(true);
-	            var queryJson = _this.runCypherQuery(_this.state.userInput.toString());
+	            _Singleton2.default.neo4jData.queryResultObject = _this.runCypherQuery(_this.state.userInput.toString());
+	
+	            // Dispatch an action
+	            _store2.default.dispatch({
+	                type: 'CYPHER_QUERY_START'
+	            });
+	
+	            // Log the current state
+	            console.log(_store2.default.getState());
 	        };
 	
 	        _this.handleKeyPress = function (event) {
 	            if (event.key == 'Enter') {
 	                event.preventDefault();
 	                // TODO: add user input validation
+	
 	                // Ask Neo4j to run the user input as a Cypher Query (currently assumes user input is a valid Cypher query and JavaScript string type)
 	                _this.clearQueryResults();
 	                _this.setLoading(true);
-	                var queryJson = _this.runCypherQuery(event.target.value.toString());
+	                _Singleton2.default.neo4jData.queryResultObject = _this.runCypherQuery(event.target.value.toString());
+	
+	                // Dispatch an action
+	                _store2.default.dispatch({
+	                    type: 'CYPHER_QUERY_START'
+	                });
+	
+	                // Log the current state
+	                console.log(_store2.default.getState());
 	            }
 	        };
 	
+	        console.log(_store2.default.getState());
+	
+	        // Every time the state changes, log it
+	        // Note that subscribe() returns a function for unregistering the listener
+	        var unsubscribe = _store2.default.subscribe(function () {
+	            return console.log(_store2.default.getState());
+	        });
+	
 	        _this.transactionUrl = 'http://localhost:7474/db/data/transaction';
 	        _this.commitUrl = '';
+	        _Singleton2.default.neo4jData.drawGraph = false;
 	
-	        window.drawGraph = false;
+	        _this.nodes = [];
+	        _this.relationships = [];
 	
 	        _this.state = {
 	            userInput: '',
 	            isLoading: false,
-	            queryJson: null
+	            queryJson: null,
+	            drawD3Component: false
 	        };
 	
 	        _this.style = {
@@ -91401,11 +92231,16 @@ webpackJsonp([1,2],[
 	
 	
 	    _createClass(CypherQueryInput, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            console.log("CypherQueryInput mounted.");
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
 	                'div',
-	                { className: 'cypher-query-component' },
+	                { className: 'cypher-query-component', id: 'cypher-query-component' },
 	                _react2.default.createElement(_TextField2.default, {
 	                    id: 'cypher-query-input',
 	                    value: this.state.userInput,
@@ -91440,7 +92275,7 @@ webpackJsonp([1,2],[
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "CypherQueryInput.jsx" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ },
-/* 536 */
+/* 546 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -91450,7 +92285,7 @@ webpackJsonp([1,2],[
 	});
 	exports.default = undefined;
 	
-	var _TextField = __webpack_require__(537);
+	var _TextField = __webpack_require__(547);
 	
 	var _TextField2 = _interopRequireDefault(_TextField);
 	
@@ -91459,7 +92294,7 @@ webpackJsonp([1,2],[
 	exports.default = _TextField2.default;
 
 /***/ },
-/* 537 */
+/* 547 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -91502,19 +92337,19 @@ webpackJsonp([1,2],[
 	
 	var _deprecatedPropType2 = _interopRequireDefault(_deprecatedPropType);
 	
-	var _EnhancedTextarea = __webpack_require__(538);
+	var _EnhancedTextarea = __webpack_require__(548);
 	
 	var _EnhancedTextarea2 = _interopRequireDefault(_EnhancedTextarea);
 	
-	var _TextFieldHint = __webpack_require__(539);
+	var _TextFieldHint = __webpack_require__(549);
 	
 	var _TextFieldHint2 = _interopRequireDefault(_TextFieldHint);
 	
-	var _TextFieldLabel = __webpack_require__(540);
+	var _TextFieldLabel = __webpack_require__(550);
 	
 	var _TextFieldLabel2 = _interopRequireDefault(_TextFieldLabel);
 	
-	var _TextFieldUnderline = __webpack_require__(541);
+	var _TextFieldUnderline = __webpack_require__(551);
 	
 	var _TextFieldUnderline2 = _interopRequireDefault(_TextFieldUnderline);
 	
@@ -92033,7 +92868,7 @@ webpackJsonp([1,2],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14)))
 
 /***/ },
-/* 538 */
+/* 548 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -92261,7 +93096,7 @@ webpackJsonp([1,2],[
 	exports.default = EnhancedTextarea;
 
 /***/ },
-/* 539 */
+/* 549 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -92342,7 +93177,7 @@ webpackJsonp([1,2],[
 	exports.default = TextFieldHint;
 
 /***/ },
-/* 540 */
+/* 550 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -92459,7 +93294,7 @@ webpackJsonp([1,2],[
 	exports.default = TextFieldLabel;
 
 /***/ },
-/* 541 */
+/* 551 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -92595,7 +93430,7 @@ webpackJsonp([1,2],[
 	exports.default = TextFieldUnderline;
 
 /***/ },
-/* 542 */
+/* 552 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -92605,7 +93440,7 @@ webpackJsonp([1,2],[
 	});
 	exports.default = undefined;
 	
-	var _LinearProgress = __webpack_require__(543);
+	var _LinearProgress = __webpack_require__(553);
 	
 	var _LinearProgress2 = _interopRequireDefault(_LinearProgress);
 	
@@ -92614,7 +93449,7 @@ webpackJsonp([1,2],[
 	exports.default = _LinearProgress2.default;
 
 /***/ },
-/* 543 */
+/* 553 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -92832,7 +93667,7 @@ webpackJsonp([1,2],[
 	exports.default = LinearProgress;
 
 /***/ },
-/* 544 */
+/* 554 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -92842,7 +93677,7 @@ webpackJsonp([1,2],[
 	});
 	exports.default = undefined;
 	
-	var _RaisedButton = __webpack_require__(545);
+	var _RaisedButton = __webpack_require__(555);
 	
 	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 	
@@ -92851,7 +93686,7 @@ webpackJsonp([1,2],[
 	exports.default = _RaisedButton2.default;
 
 /***/ },
-/* 545 */
+/* 555 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -93305,7 +94140,7 @@ webpackJsonp([1,2],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14)))
 
 /***/ },
-/* 546 */
+/* 556 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -93315,7 +94150,7 @@ webpackJsonp([1,2],[
 	});
 	exports.default = undefined;
 	
-	var _FlatButton = __webpack_require__(547);
+	var _FlatButton = __webpack_require__(557);
 	
 	var _FlatButton2 = _interopRequireDefault(_FlatButton);
 	
@@ -93324,7 +94159,7 @@ webpackJsonp([1,2],[
 	exports.default = _FlatButton2.default;
 
 /***/ },
-/* 547 */
+/* 557 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -93357,7 +94192,7 @@ webpackJsonp([1,2],[
 	
 	var _EnhancedButton2 = _interopRequireDefault(_EnhancedButton);
 	
-	var _FlatButtonLabel = __webpack_require__(548);
+	var _FlatButtonLabel = __webpack_require__(558);
 	
 	var _FlatButtonLabel2 = _interopRequireDefault(_FlatButtonLabel);
 	
@@ -93642,7 +94477,7 @@ webpackJsonp([1,2],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14)))
 
 /***/ },
-/* 548 */
+/* 558 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -93723,7 +94558,7 @@ webpackJsonp([1,2],[
 	exports.default = FlatButtonLabel;
 
 /***/ },
-/* 549 */
+/* 559 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
@@ -93740,642 +94575,15 @@ webpackJsonp([1,2],[
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 549;
+	webpackContext.id = 559;
 
 
 /***/ },
-/* 550 */
+/* 560 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-	
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _redux = __webpack_require__(253);
-	
-	var _reduxLogger = __webpack_require__(551);
-	
-	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
-	
-	var _reduxThunk = __webpack_require__(552);
-	
-	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
-	
-	var _reduxPromiseMiddleware = __webpack_require__(553);
-	
-	var _reduxPromiseMiddleware2 = _interopRequireDefault(_reduxPromiseMiddleware);
-	
-	var _reducers = __webpack_require__(555);
-	
-	var _reducers2 = _interopRequireDefault(_reducers);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var middleware = (0, _redux.applyMiddleware)((0, _reduxPromiseMiddleware2.default)(), _reduxThunk2.default);
-	
-	exports.default = (0, _redux.createStore)(_reducers2.default, middleware);
-	
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "store.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 551 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
-	
-	var repeat = function repeat(str, times) {
-	  return new Array(times + 1).join(str);
-	};
-	var pad = function pad(num, maxLength) {
-	  return repeat("0", maxLength - num.toString().length) + num;
-	};
-	var formatTime = function formatTime(time) {
-	  return "@ " + pad(time.getHours(), 2) + ":" + pad(time.getMinutes(), 2) + ":" + pad(time.getSeconds(), 2) + "." + pad(time.getMilliseconds(), 3);
-	};
-	
-	// Use the new performance api to get better precision if available
-	var timer = typeof performance !== "undefined" && typeof performance.now === "function" ? performance : Date;
-	
-	/**
-	 * parse the level option of createLogger
-	 *
-	 * @property {string | function | object} level - console[level]
-	 * @property {object} action
-	 * @property {array} payload
-	 * @property {string} type
-	 */
-	
-	function getLogLevel(level, action, payload, type) {
-	  switch (typeof level === "undefined" ? "undefined" : _typeof(level)) {
-	    case "object":
-	      return typeof level[type] === "function" ? level[type].apply(level, _toConsumableArray(payload)) : level[type];
-	    case "function":
-	      return level(action);
-	    default:
-	      return level;
-	  }
-	}
-	
-	/**
-	 * Creates logger with followed options
-	 *
-	 * @namespace
-	 * @property {object} options - options for logger
-	 * @property {string | function | object} options.level - console[level]
-	 * @property {boolean} options.duration - print duration of each action?
-	 * @property {boolean} options.timestamp - print timestamp with each action?
-	 * @property {object} options.colors - custom colors
-	 * @property {object} options.logger - implementation of the `console` API
-	 * @property {boolean} options.logErrors - should errors in action execution be caught, logged, and re-thrown?
-	 * @property {boolean} options.collapsed - is group collapsed?
-	 * @property {boolean} options.predicate - condition which resolves logger behavior
-	 * @property {function} options.stateTransformer - transform state before print
-	 * @property {function} options.actionTransformer - transform action before print
-	 * @property {function} options.errorTransformer - transform error before print
-	 */
-	
-	function createLogger() {
-	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	  var _options$level = options.level;
-	  var level = _options$level === undefined ? "log" : _options$level;
-	  var _options$logger = options.logger;
-	  var logger = _options$logger === undefined ? console : _options$logger;
-	  var _options$logErrors = options.logErrors;
-	  var logErrors = _options$logErrors === undefined ? true : _options$logErrors;
-	  var collapsed = options.collapsed;
-	  var predicate = options.predicate;
-	  var _options$duration = options.duration;
-	  var duration = _options$duration === undefined ? false : _options$duration;
-	  var _options$timestamp = options.timestamp;
-	  var timestamp = _options$timestamp === undefined ? true : _options$timestamp;
-	  var transformer = options.transformer;
-	  var _options$stateTransfo = options.stateTransformer;
-	  var // deprecated
-	  stateTransformer = _options$stateTransfo === undefined ? function (state) {
-	    return state;
-	  } : _options$stateTransfo;
-	  var _options$actionTransf = options.actionTransformer;
-	  var actionTransformer = _options$actionTransf === undefined ? function (actn) {
-	    return actn;
-	  } : _options$actionTransf;
-	  var _options$errorTransfo = options.errorTransformer;
-	  var errorTransformer = _options$errorTransfo === undefined ? function (error) {
-	    return error;
-	  } : _options$errorTransfo;
-	  var _options$colors = options.colors;
-	  var colors = _options$colors === undefined ? {
-	    title: function title() {
-	      return "#000000";
-	    },
-	    prevState: function prevState() {
-	      return "#9E9E9E";
-	    },
-	    action: function action() {
-	      return "#03A9F4";
-	    },
-	    nextState: function nextState() {
-	      return "#4CAF50";
-	    },
-	    error: function error() {
-	      return "#F20404";
-	    }
-	  } : _options$colors;
-	
-	  // exit if console undefined
-	
-	  if (typeof logger === "undefined") {
-	    return function () {
-	      return function (next) {
-	        return function (action) {
-	          return next(action);
-	        };
-	      };
-	    };
-	  }
-	
-	  if (transformer) {
-	    console.error("Option 'transformer' is deprecated, use stateTransformer instead");
-	  }
-	
-	  var logBuffer = [];
-	  function printBuffer() {
-	    logBuffer.forEach(function (logEntry, key) {
-	      var started = logEntry.started;
-	      var startedTime = logEntry.startedTime;
-	      var action = logEntry.action;
-	      var prevState = logEntry.prevState;
-	      var error = logEntry.error;
-	      var took = logEntry.took;
-	      var nextState = logEntry.nextState;
-	
-	      var nextEntry = logBuffer[key + 1];
-	      if (nextEntry) {
-	        nextState = nextEntry.prevState;
-	        took = nextEntry.started - started;
-	      }
-	      // message
-	      var formattedAction = actionTransformer(action);
-	      var isCollapsed = typeof collapsed === "function" ? collapsed(function () {
-	        return nextState;
-	      }, action) : collapsed;
-	
-	      var formattedTime = formatTime(startedTime);
-	      var titleCSS = colors.title ? "color: " + colors.title(formattedAction) + ";" : null;
-	      var title = "action " + (timestamp ? formattedTime : "") + " " + formattedAction.type + " " + (duration ? "(in " + took.toFixed(2) + " ms)" : "");
-	
-	      // render
-	      try {
-	        if (isCollapsed) {
-	          if (colors.title) logger.groupCollapsed("%c " + title, titleCSS);else logger.groupCollapsed(title);
-	        } else {
-	          if (colors.title) logger.group("%c " + title, titleCSS);else logger.group(title);
-	        }
-	      } catch (e) {
-	        logger.log(title);
-	      }
-	
-	      var prevStateLevel = getLogLevel(level, formattedAction, [prevState], "prevState");
-	      var actionLevel = getLogLevel(level, formattedAction, [formattedAction], "action");
-	      var errorLevel = getLogLevel(level, formattedAction, [error, prevState], "error");
-	      var nextStateLevel = getLogLevel(level, formattedAction, [nextState], "nextState");
-	
-	      if (prevStateLevel) {
-	        if (colors.prevState) logger[prevStateLevel]("%c prev state", "color: " + colors.prevState(prevState) + "; font-weight: bold", prevState);else logger[prevStateLevel]("prev state", prevState);
-	      }
-	
-	      if (actionLevel) {
-	        if (colors.action) logger[actionLevel]("%c action", "color: " + colors.action(formattedAction) + "; font-weight: bold", formattedAction);else logger[actionLevel]("action", formattedAction);
-	      }
-	
-	      if (error && errorLevel) {
-	        if (colors.error) logger[errorLevel]("%c error", "color: " + colors.error(error, prevState) + "; font-weight: bold", error);else logger[errorLevel]("error", error);
-	      }
-	
-	      if (nextStateLevel) {
-	        if (colors.nextState) logger[nextStateLevel]("%c next state", "color: " + colors.nextState(nextState) + "; font-weight: bold", nextState);else logger[nextStateLevel]("next state", nextState);
-	      }
-	
-	      try {
-	        logger.groupEnd();
-	      } catch (e) {
-	        logger.log("—— log end ——");
-	      }
-	    });
-	    logBuffer.length = 0;
-	  }
-	
-	  return function (_ref) {
-	    var getState = _ref.getState;
-	    return function (next) {
-	      return function (action) {
-	        // exit early if predicate function returns false
-	        if (typeof predicate === "function" && !predicate(getState, action)) {
-	          return next(action);
-	        }
-	
-	        var logEntry = {};
-	        logBuffer.push(logEntry);
-	
-	        logEntry.started = timer.now();
-	        logEntry.startedTime = new Date();
-	        logEntry.prevState = stateTransformer(getState());
-	        logEntry.action = action;
-	
-	        var returnedValue = undefined;
-	        if (logErrors) {
-	          try {
-	            returnedValue = next(action);
-	          } catch (e) {
-	            logEntry.error = errorTransformer(e);
-	          }
-	        } else {
-	          returnedValue = next(action);
-	        }
-	
-	        logEntry.took = timer.now() - logEntry.started;
-	        logEntry.nextState = stateTransformer(getState());
-	
-	        printBuffer();
-	
-	        if (logEntry.error) throw logEntry.error;
-	        return returnedValue;
-	      };
-	    };
-	  };
-	}
-	
-	module.exports = createLogger;
-
-/***/ },
-/* 552 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	exports.__esModule = true;
-	function createThunkMiddleware(extraArgument) {
-	  return function (_ref) {
-	    var dispatch = _ref.dispatch;
-	    var getState = _ref.getState;
-	    return function (next) {
-	      return function (action) {
-	        if (typeof action === 'function') {
-	          return action(dispatch, getState, extraArgument);
-	        }
-	
-	        return next(action);
-	      };
-	    };
-	  };
-	}
-	
-	var thunk = createThunkMiddleware();
-	thunk.withExtraArgument = createThunkMiddleware;
-	
-	exports['default'] = thunk;
-
-/***/ },
-/* 553 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-	
-	exports.default = promiseMiddleware;
-	
-	var _isPromise = __webpack_require__(554);
-	
-	var _isPromise2 = _interopRequireDefault(_isPromise);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var defaultTypes = ['PENDING', 'FULFILLED', 'REJECTED'];
-	
-	/**
-	 * @function promiseMiddleware
-	 * @description
-	 * @returns {function} thunk
-	 */
-	function promiseMiddleware() {
-	  var config = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-	
-	  var promiseTypeSuffixes = config.promiseTypeSuffixes || defaultTypes;
-	
-	  return function (ref) {
-	    var dispatch = ref.dispatch;
-	
-	
-	    return function (next) {
-	      return function (action) {
-	        if (action.payload) {
-	          if (!(0, _isPromise2.default)(action.payload) && !(0, _isPromise2.default)(action.payload.promise)) {
-	            return next(action);
-	          }
-	        } else {
-	          return next(action);
-	        }
-	
-	        // Deconstruct the properties of the original action object to constants
-	        var type = action.type;
-	        var payload = action.payload;
-	        var meta = action.meta;
-	
-	        // Assign values for promise type suffixes
-	
-	        var _promiseTypeSuffixes = _slicedToArray(promiseTypeSuffixes, 3);
-	
-	        var PENDING = _promiseTypeSuffixes[0];
-	        var FULFILLED = _promiseTypeSuffixes[1];
-	        var REJECTED = _promiseTypeSuffixes[2];
-	
-	        /**
-	         * @function getAction
-	         * @description Utility function for creating a rejected or fulfilled
-	         * flux standard action object.
-	         * @param {boolean} Is the action rejected?
-	         * @returns {object} action
-	         */
-	
-	        var getAction = function getAction(newPayload, isRejected) {
-	          return _extends({
-	            type: type + '_' + (isRejected ? REJECTED : FULFILLED)
-	          }, newPayload ? {
-	            payload: newPayload
-	          } : {}, !!meta ? { meta: meta } : {}, isRejected ? {
-	            error: true
-	          } : {});
-	        };
-	
-	        /**
-	         * Assign values for promise and data variables. In the case the payload
-	         * is an object with a `promise` and `data` property, the values of those
-	         * properties will be used. In the case the payload is a promise, the
-	         * value of the payload will be used and data will be null.
-	         */
-	        var promise = void 0;
-	        var data = void 0;
-	
-	        if (!(0, _isPromise2.default)(action.payload) && _typeof(action.payload) === 'object') {
-	          promise = payload.promise;
-	          data = payload.data;
-	        } else {
-	          promise = payload;
-	          data = null;
-	        }
-	
-	        /**
-	         * First, dispatch the pending action. This flux standard action object
-	         * describes the pending state of a promise and will include any data
-	         * (for optimistic updates) and/or meta from the original action.
-	         */
-	        next(_extends({
-	          type: type + '_' + PENDING
-	        }, !!data ? { payload: data } : {}, !!meta ? { meta: meta } : {}));
-	
-	        /*
-	         * @function handleReject
-	         * @description Dispatch the rejected action and return
-	         * an error object. The error object is the original error
-	         * that was thrown. The user of the library is responsible for
-	         * best practices in ensure that they are throwing an Error object.
-	         * @params reason The reason the promise was rejected
-	         * @returns {object}
-	         */
-	        var handleReject = function handleReject(reason) {
-	          var rejectedAction = getAction(reason, true);
-	          dispatch(rejectedAction);
-	          throw reason;
-	        };
-	
-	        /*
-	         * @function handleFulfill
-	         * @description Dispatch the fulfilled action and
-	         * return the success object. The success object should
-	         * contain the value and the dispatched action.
-	         * @param value The value the promise was resloved with
-	         * @returns {object}
-	         */
-	        var handleFulfill = function handleFulfill() {
-	          var value = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-	
-	          var resolvedAction = getAction(value, false);
-	          dispatch(resolvedAction);
-	
-	          return { value: value, action: resolvedAction };
-	        };
-	
-	        /**
-	         * Second, dispatch a rejected or fulfilled action. This flux standard
-	         * action object will describe the resolved state of the promise. In
-	         * the case of a rejected promise, it will include an `error` property.
-	         *
-	         * In order to allow proper chaining of actions using `then`, a new
-	         * promise is constructed and returned. This promise will resolve
-	         * with two properties: (1) the value (if fulfilled) or reason
-	         * (if rejected) and (2) the flux standard action.
-	         *
-	         * Rejected object:
-	         * {
-	         *   reason: ...
-	         *   action: {
-	         *     error: true,
-	         *     type: 'ACTION_REJECTED',
-	         *     payload: ...
-	         *   }
-	         * }
-	         *
-	         * Fulfilled object:
-	         * {
-	         *   value: ...
-	         *   action: {
-	         *     type: 'ACTION_FULFILLED',
-	         *     payload: ...
-	         *   }
-	         * }
-	         */
-	        return promise.then(handleFulfill, handleReject);
-	      };
-	    };
-	  };
-	}
-
-/***/ },
-/* 554 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-	
-	exports.default = isPromise;
-	function isPromise(value) {
-	  if (value !== null && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
-	    return value && typeof value.then === 'function';
-	  }
-	
-	  return false;
-	}
-
-/***/ },
-/* 555 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-	
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _redux = __webpack_require__(253);
-	
-	var _redux2 = __webpack_require__(556);
-	
-	var _redux3 = _interopRequireDefault(_redux2);
-	
-	var _testReducer = __webpack_require__(557);
-	
-	var _testReducer2 = _interopRequireDefault(_testReducer);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var components = {};
-	
-	function requireReducers(reducerName) {
-	
-	  var componentName = _.camelCase(reducerName) + "Reducer";
-	  components[reducerName] = __webpack_require__(558)("./" + componentName + '.js').default;
-	};
-	
-	_redux3.default.reducers.map(function (reducer) {
-	  requireReducers(reducer);
-	});
-	
-	exports.default = (0, _redux.combineReducers)(components);
-	
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "index.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 556 */
-/***/ function(module, exports) {
-
-	module.exports = {
-		"reducers": [
-			"test"
-		]
-	};
-
-/***/ },
-/* 557 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-api/modules/index.js"), RootInstanceProvider = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/RootInstanceProvider.js"), ReactMount = require("react/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-	
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	exports.default = reducer;
-	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
-	function reducer() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? {
-	    fetching: false,
-	    fetched: false,
-	    test: [],
-	    error: null
-	  } : arguments[0];
-	  var action = arguments[1];
-	
-	  switch (action.type) {
-	
-	    case "FETCH_TEST_PENDING":
-	      {
-	        return _extends({}, state, {
-	          fetching: true
-	        });
-	        break;
-	      }
-	    case "FETCH_TEST_REJECTED":
-	      {
-	        return _extends({}, state, {
-	          fetching: false,
-	          error: action.payload
-	        });
-	        break;
-	      }
-	    case "FETCH_TEST_FULFILLED":
-	      {
-	        return _extends({}, state, {
-	          fetching: false,
-	          fetched: false,
-	          test: [].concat(_toConsumableArray(state.test))
-	        });
-	        break;
-	      }
-	
-	  }
-	
-	  return state;
-	}
-	
-	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("/Users/gchriste/github/p2ep-app/web/node_modules/react-hot-loader/makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "testReducer.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-
-/***/ },
-/* 558 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var map = {
-		"./index.js": 555,
-		"./testReducer.js": 557
-	};
-	function webpackContext(req) {
-		return __webpack_require__(webpackContextResolve(req));
-	};
-	function webpackContextResolve(req) {
-		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
-	};
-	webpackContext.keys = function webpackContextKeys() {
-		return Object.keys(map);
-	};
-	webpackContext.resolve = webpackContextResolve;
-	module.exports = webpackContext;
-	webpackContext.id = 558;
-
-
-/***/ },
-/* 559 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(560);
-	var defaultClickRejectionStrategy = __webpack_require__(561);
+	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(561);
+	var defaultClickRejectionStrategy = __webpack_require__(562);
 	
 	var alreadyInjected = false;
 	
@@ -94397,14 +94605,14 @@ webpackJsonp([1,2],[
 	  alreadyInjected = true;
 	
 	  __webpack_require__(54).injection.injectEventPluginsByName({
-	    'TapEventPlugin':       __webpack_require__(562)(shouldRejectClick)
+	    'TapEventPlugin':       __webpack_require__(563)(shouldRejectClick)
 	  });
 	};
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14)))
 
 /***/ },
-/* 560 */
+/* 561 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -94459,7 +94667,7 @@ webpackJsonp([1,2],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14)))
 
 /***/ },
-/* 561 */
+/* 562 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -94470,7 +94678,7 @@ webpackJsonp([1,2],[
 
 
 /***/ },
-/* 562 */
+/* 563 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -94498,10 +94706,10 @@ webpackJsonp([1,2],[
 	var EventPluginUtils = __webpack_require__(56);
 	var EventPropagators = __webpack_require__(53);
 	var SyntheticUIEvent = __webpack_require__(87);
-	var TouchEventUtils = __webpack_require__(563);
+	var TouchEventUtils = __webpack_require__(564);
 	var ViewportMetrics = __webpack_require__(88);
 	
-	var keyOf = __webpack_require__(564);
+	var keyOf = __webpack_require__(565);
 	var topLevelTypes = EventConstants.topLevelTypes;
 	
 	var isStartish = EventPluginUtils.isStartish;
@@ -94646,7 +94854,7 @@ webpackJsonp([1,2],[
 
 
 /***/ },
-/* 563 */
+/* 564 */
 /***/ function(module, exports) {
 
 	/**
@@ -94694,7 +94902,7 @@ webpackJsonp([1,2],[
 
 
 /***/ },
-/* 564 */
+/* 565 */
 /***/ function(module, exports) {
 
 	/**

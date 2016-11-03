@@ -1,19 +1,19 @@
 import React from 'react';
 import D3ForceDirectedGraph from './D3ForceDirectedGraph.jsx';
 import CypherQueryInput from './CypherQueryInput.jsx';
+import Singleton from '../singleton/Singleton.js';
 import $ from 'jquery';
 import _ from 'lodash';
 
 
 class Neo4jGraphQueryComponent extends React.Component {
-
     constructor(props) {
         super(props);
 
         this.state = {
             isLoading: false,
             queryJson: null,
-            showGraphComponent: false
+            showD3Component: false
         };
 
         this.style = {
@@ -25,32 +25,32 @@ class Neo4jGraphQueryComponent extends React.Component {
 
     // Sorry to my future self or whoever reads this for how ugly the parsing code is, but it works.
     parseQueryJson = (jsonObject) => {
-        window.queryJson = jsonObject;
-        window.results = jsonObject.results[0];
-        window.columns = results.columns;
-        window.data = results.data;
-        window.stats = results.stats;
-        window.graphs = [];
-        window.graphData = [];
-        window.nodes = [];
-        window.relationships = [];
-        window.nodeIds = [];
-        window.nodeIndexHash = {};
+        Singleton.neo4jData.queryJson = jsonObject;
+        Singleton.neo4jData.results = jsonObject.results[0];
+        Singleton.neo4jData.columns = results.columns;
+        Singleton.neo4jData.data = results.data;
+        Singleton.neo4jData.stats = results.stats;
+        Singleton.neo4jData.graphs = [];
+        Singleton.neo4jData.graphData = [];
+        Singleton.neo4jData.nodes = [];
+        Singleton.neo4jData.relationships = [];
+        Singleton.neo4jData.nodeIds = [];
+        Singleton.neo4jData.nodeIndexHash = {};
         var nodes = [];
         var relationships = [];
 
         // Fill the nodes and relationship arrays
         for (var i = 0; i < results.data.length; i++) {
-            var data = window.data[i];
-            window.graphs.push(data.graph);
-            window.graphData.push(data);
+            var data = Singleton.neo4jData.data[i];
+            Singleton.neo4jData.graphs.push(data.graph);
+            Singleton.neo4jData.graphData.push(data);
             var graph = data.graph;
-            window.nodes.push(graph.nodes);
-            window.nodes = _.flatten(window.nodes);
-            window.relationships.push(graph.relationships);
-            window.relationships = _.flatten(window.relationships);
-            nodes = window.nodes;
-            relationships = window.relationships;
+            Singleton.neo4jData.nodes.push(graph.nodes);
+            Singleton.neo4jData.nodes = _.flatten(Singleton.neo4jData.nodes);
+            Singleton.neo4jData.relationships.push(graph.relationships);
+            Singleton.neo4jData.relationships = _.flatten(Singleton.neo4jData.relationships);
+            nodes = Singleton.neo4jData.nodes;
+            relationships = Singleton.neo4jData.relationships;
         }
 
         var d3_nodes = [];
@@ -77,33 +77,33 @@ class Neo4jGraphQueryComponent extends React.Component {
             d3_nodes.push(d3_node);
         }
 
-        window.d3_nodes = d3_nodes;
+        Singleton.neo4jData.d3_nodes = d3_nodes;
         for (var index = 0; index < d3_nodes.length; index++) {
             var key = d3_nodes[index].id;
             var value = index;
-            window.nodeIndexHash[key] = value;
+            Singleton.neo4jData.nodeIndexHash[key] = value;
         }
 
         for (var j = 0; j < relationships.length; j++) {
             var relationship = relationships[j];
             var startNodeId = relationship.startNode;
             var endNodeId = relationship.endNode;
-            var sourceIndex = window.nodeIndexHash[startNodeId];
-            var targetIndex = window.nodeIndexHash[endNodeId];
+            var sourceIndex = Singleton.neo4jData.nodeIndexHash[startNodeId];
+            var targetIndex = Singleton.neo4jData.nodeIndexHash[endNodeId];
             var d3_link = {
                 'source': sourceIndex,
                 'target': targetIndex
             };
             d3_links.push(d3_link);
         }
-        window.d3_links = d3_links;
-        window.d3_graph = {
-            'nodes': window.d3_nodes,
-            'links': window.d3_links
+        Singleton.neo4jData.d3_links = d3_links;
+        Singleton.neo4jData.d3_graph = {
+            'nodes': Singleton.neo4jData.d3_nodes,
+            'links': Singleton.neo4jData.d3_links
         };
-        console.prettyPrint(window.d3_graph);
-        //TODO: Draw D3 graph with window.d3_graph as json input
-        window.drawGraph = true;
+        console.prettyPrint(Singleton.neo4jData.d3_graph);
+        //TODO: Draw D3 graph with Singleton.neo4jData.d3_graph as json input
+        Singleton.neo4jData.drawGraph = true;
     };
 
 

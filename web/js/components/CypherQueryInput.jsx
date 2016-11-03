@@ -1,6 +1,7 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import LinearProgress from 'material-ui/LinearProgress';
+import Singleton from '../singleton/Singleton.js';
 import D3ForceDirectedGraph from './D3ForceDirectedGraph.jsx';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
@@ -8,21 +9,35 @@ import FlatButton from 'material-ui/FlatButton';
 import $ from 'jquery';
 import _ from 'lodash';
 import UI from 'UI';
+import store from '../store.js'
 
 
 class CypherQueryInput extends React.Component {
 
     constructor(props) {
         super(props);
+
+        // Log the initial state
+        console.log(store.getState())
+
+        // Every time the state changes, log it
+        // Note that subscribe() returns a function for unregistering the listener
+        let unsubscribe = store.subscribe(() =>
+            console.log(store.getState())
+        )
+
         this.transactionUrl = 'http://localhost:7474/db/data/transaction';
         this.commitUrl = '';
+        Singleton.neo4jData.drawGraph = false;
 
-        window.drawGraph = false;
+        this.nodes = [];
+        this.relationships = [];
 
         this.state = {
             userInput: '',
             isLoading: false,
-            queryJson: null
+            queryJson: null,
+            drawD3Component: false
         };
 
         this.style = {
@@ -40,7 +55,7 @@ class CypherQueryInput extends React.Component {
         };
     }
 
-    // Handler for when text changes in the CypherQueryInput TextField
+        // Handler for when text changes in the CypherQueryInput TextField
     handleChange = (event) => {
         this.setState({
             userInput: event.target.value,
@@ -49,6 +64,26 @@ class CypherQueryInput extends React.Component {
 
     // Asks Neo4j to run the user input as a Cypher Query. Returns a JSON object with the Cypher Query results.
     runCypherQuery = (userInput) => {
+        var that = this;
+        Singleton.neo4jData.queryJson = null;
+        Singleton.neo4jData.results = null;
+        Singleton.neo4jData.columns = null;
+        Singleton.neo4jData.data = null;
+        Singleton.neo4jData.stats = null;
+        Singleton.neo4jData.graph = {};
+        Singleton.neo4jData.graphs = [];
+        Singleton.neo4jData.graphData = [];
+        Singleton.neo4jData.nodes = [];
+        Singleton.neo4jData.relationships = [];
+        Singleton.neo4jData.nodeIds = [];
+        Singleton.neo4jData.nodeIndexHash = {};
+        Singleton.neo4jData.nodes = [];
+        Singleton.neo4jData.relationships = [];
+        Singleton.neo4jData.d3_nodes = [];
+        Singleton.neo4jData.d3_links = [];
+        Singleton.neo4jData.d3_graph = {};
+
+
         var jsonifyCypherStatement = function (cypherQuery) {
             var jsonData = JSON.stringify({
                 "statements": [{
@@ -66,39 +101,27 @@ class CypherQueryInput extends React.Component {
 
         // Sorry to my future self or whoever reads this for how ugly the parsing code is, but it works.
         var parseQueryJson = function (jsonObject) {
-            window.queryJson = jsonObject;
-            window.results = jsonObject.results[0];
-            window.columns = results.columns;
-            window.data = results.data;
-            window.stats = results.stats;
-            window.graphs = [];
-            window.graphData = [];
-            window.nodes = [];
-            window.relationships = [];
-            window.nodeIds = [];
-            window.nodeIndexHash = {};
-            var nodes = [];
-            var relationships = [];
+            Singleton.neo4jData.queryJson = jsonObject;
+            Singleton.neo4jData.results = jsonObject.results[0];
+            Singleton.neo4jData.columns = Singleton.neo4jData.results.columns;
+            Singleton.neo4jData.data = Singleton.neo4jData.results.data;
+            Singleton.neo4jData.stats = Singleton.neo4jData.results.stats;
+
 
             // Fill the nodes and relationship arrays
-            for (var i = 0; i < results.data.length; i++) {
-                var data = window.data[i];
-                window.graphs.push(data.graph);
-                window.graphData.push(data);
-                var graph = data.graph;
-                window.nodes.push(graph.nodes);
-                window.nodes = _.flatten(window.nodes);
-                window.relationships.push(graph.relationships);
-                window.relationships = _.flatten(window.relationships);
-                nodes = window.nodes;
-                relationships = window.relationships;
+            for (var i = 0; i < Singleton.neo4jData.results.data.length; i++) {
+                var _data = Singleton.neo4jData.data[i];
+                Singleton.neo4jData.graphs.push(_data.graph);
+                Singleton.neo4jData.graphData.push(_data);
+                var _graph = _data.graph;
+                Singleton.neo4jData.nodes.push(_graph.nodes);
+                Singleton.neo4jData.nodes = _.flatten(Singleton.neo4jData.nodes);
+                Singleton.neo4jData.relationships.push(_graph.relationships);
+                Singleton.neo4jData.relationships = _.flatten(Singleton.neo4jData.relationships);
             }
 
-            var d3_nodes = [];
-            var d3_links = [];
-
-            for (var i2 = 0; i2 < nodes.length; i2++) {
-                var node = nodes[i2];
+            for (var i2 = 0; i2 < Singleton.neo4jData.nodes.length; i2++) {
+                var node = Singleton.neo4jData.nodes[i2];
                 var id = node.id;
                 var label = node.labels[0];
                 var properties = node.properties;
@@ -115,36 +138,40 @@ class CypherQueryInput extends React.Component {
                 d3_node['source'] = source;
                 d3_node['sourceId'] = sourceId;
                 d3_node['synonyms'] = synonyms;
-                d3_nodes.push(d3_node);
+                Singleton.neo4jData.d3_nodes.push(d3_node);
             }
 
-            window.d3_nodes = d3_nodes;
-            for (var index = 0; index < d3_nodes.length; index++) {
-                var key = d3_nodes[index].id;
+            for (var index = 0; index < Singleton.neo4jData.d3_nodes.length; index++) {
+                var key = Singleton.neo4jData.d3_nodes[index].id;
                 var value = index;
-                window.nodeIndexHash[key] = value;
+                Singleton.neo4jData.nodeIndexHash[key] = value;
             }
 
-            for (var j = 0; j < relationships.length; j++) {
-                var relationship = relationships[j];
+            for (var j = 0; j < Singleton.neo4jData.relationships.length; j++) {
+                var relationship = Singleton.neo4jData.relationships[j];
                 var startNodeId = relationship.startNode;
                 var endNodeId = relationship.endNode;
-                var sourceIndex = window.nodeIndexHash[startNodeId];
-                var targetIndex = window.nodeIndexHash[endNodeId];
+                var sourceIndex = Singleton.neo4jData.nodeIndexHash[startNodeId];
+                var targetIndex = Singleton.neo4jData.nodeIndexHash[endNodeId];
                 var d3_link = {
                     'source': sourceIndex,
                     'target': targetIndex
                 };
-                d3_links.push(d3_link);
+                Singleton.neo4jData.d3_links.push(d3_link);
             }
-            window.d3_links = d3_links;
-            window.d3_graph = {
-                'nodes': window.d3_nodes,
-                'links': window.d3_links
+            Singleton.neo4jData.d3_graph = {
+                'nodes': Singleton.neo4jData.d3_nodes,
+                'links': Singleton.neo4jData.d3_links
             };
-            console.prettyPrint(window.d3_graph);
-            //TODO: Draw D3 graph with window.d3_graph as json input
-            window.drawGraph = true;
+            //console.log("D3 Graph:");
+            //console.prettyPrint(d3_graph);
+            //TODO: Draw D3 graph with d3_graph as json input
+            that.setState({ drawD3Component: true });
+            // Dispatch an action
+            store.dispatch({
+                type: 'DRAW_FORCE_DIRECTED_GRAPH',
+            });
+            return Singleton.neo4jData.d3_graph;
         };
 
         // POST request that sends the JSON encoded Cypher query (user input) to Neo4j
@@ -172,20 +199,26 @@ class CypherQueryInput extends React.Component {
                         contentType: 'application/json;charset=utf-8',
                         cache: false,
                         success: function (jsonObject) {
+                            // Dispatch an action
+                            store.dispatch({
+                                type: 'CYPHER_QUERY_END'
+                            });
                             console.log('Cypher Query results:');
-                            console.prettyPrint(jsonObject);
+                            //console.prettyPrint(jsonObject);
                             this.setState({queryJson: jsonObject});
-                            window.nodeIdToIndexDict = {};
-                            parseQueryJson(jsonObject);
+                            Singleton.neo4jData.graph = parseQueryJson(jsonObject);
+                            console.log(Singleton.neo4jData.graph);
                         }.bind(this),
                         error: function (xhr, status, err) {
+                            // Dispatch an action
+                            store.dispatch({
+                                type: 'CYPHER_QUERY_END'
+                            });
                             console.log('Error attempting to POST this data:');
                             console.prettyPrint(jsonData);
                             console.error(this.commitUrl, status, err.toString());
                             this.setState({queryJson: jsonObject});
-                            window.nodeIdToIndexDict = {};
-                            parseQueryJson(jsonObject);
-
+                            //var graph = parseQueryJson(jsonObject);
                         }.bind(this)
                     });
                 }.bind(this),
@@ -195,6 +228,7 @@ class CypherQueryInput extends React.Component {
             });
         };
         postCypherJson.call(this);
+        return Singleton.neo4jData.graph;
     };
 
     setLoading = (value) => {
@@ -207,10 +241,19 @@ class CypherQueryInput extends React.Component {
 
     handleClick = (event) => {
         // TODO: add user input validation
+
         // Ask Neo4j to run the user input as a Cypher Query (currently assumes user input is a valid Cypher query and JavaScript string type)
         this.clearQueryResults();
         this.setLoading(true);
-        var queryJson = this.runCypherQuery(this.state.userInput.toString());
+        Singleton.neo4jData.queryResultObject = this.runCypherQuery(this.state.userInput.toString());
+
+        // Dispatch an action
+        store.dispatch({
+            type: 'CYPHER_QUERY_START'
+        });
+
+        // Log the current state
+        console.log(store.getState())
     };
 
     // Handler that listens for when keys are pressed
@@ -218,16 +261,29 @@ class CypherQueryInput extends React.Component {
         if (event.key == 'Enter') {
             event.preventDefault();
             // TODO: add user input validation
+
             // Ask Neo4j to run the user input as a Cypher Query (currently assumes user input is a valid Cypher query and JavaScript string type)
             this.clearQueryResults();
             this.setLoading(true);
-            var queryJson = this.runCypherQuery(event.target.value.toString());
+            Singleton.neo4jData.queryResultObject = this.runCypherQuery(event.target.value.toString());
+
+            // Dispatch an action
+            store.dispatch({
+                type: 'CYPHER_QUERY_START'
+            });
+
+            // Log the current state
+            console.log(store.getState())
         }
     };
 
+    componentDidMount() {
+        console.log("CypherQueryInput mounted.");
+    }
+
     render() {
         return (
-            <div class="cypher-query-component">
+            <div class="cypher-query-component" id="cypher-query-component">
                 <TextField
                     id="cypher-query-input"
                     value={this.state.userInput}
@@ -250,7 +306,6 @@ class CypherQueryInput extends React.Component {
                     onClick={this.handleClick}
                 />
                 {this.state.isLoading && this.state.queryJson === null ? <LinearProgress mode="indeterminate"/> : <br/>}
-
             </div>
         );
     }

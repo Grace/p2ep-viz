@@ -2,7 +2,7 @@
 import { combineReducers } from "redux";
 
 import reduxData from '../config/redux.json';
-import test from './testReducer.js';
+import app from './appReducer.js';
 
 const components = {};
 
