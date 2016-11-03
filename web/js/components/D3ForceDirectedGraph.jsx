@@ -12,31 +12,32 @@ import store from '../store.js'
 const D3ForceDirectedGraph = d3Wrap({
     initialize (svg, data, options) {
         // Optional initialize method called once when component mounts
+
+        // continue your d3 implementation as usual...
         Singleton.d3Data.svg = d3.select(svg)
-                .append('g')
-                .attr('transform', `translate(${options.margin.left}, ${options.margin.top})`);
+            .append('g')
+            .attr('transform', `translate(${options.margin.left}, ${options.margin.top})`);
         Singleton.d3Data.width = +Singleton.d3Data.svg.attr("width");
         Singleton.d3Data.height = +Singleton.d3Data.svg.attr("height");
 
-        // continue your d3 implementation as usual...
-        Singleton.d3Data.simulation = d3.forceSimulation()
-            .force("link", d3.forceLink().id(function(d) {
-                return d.index;
-            }))
-            .force("charge", d3.forceManyBody())
-            .force("center", d3.forceCenter(Singleton.d3Data.width / 2, Singleton.d3Data.height / 2));
-
-        Singleton.d3Data.labelColor = {
-            "Plant": "#00b159",
-            "Gene": "#00aedb",
-            "Disease": "#d11141",
-            "Medical_Heading": "#d11141",
-            "Chemical": "#ffc425",
-            "Pathway": "#f37735"
-        }
-
         store.subscribe( function() {
             console.log("State changed");
+
+            Singleton.d3Data.simulation = d3.forceSimulation()
+                .force("link", d3.forceLink().id(function(d) {
+                    return d.index;
+                }))
+                .force("charge", d3.forceManyBody())
+                .force("center", d3.forceCenter(Singleton.d3Data.width / 2, Singleton.d3Data.height / 2));
+
+            Singleton.d3Data.labelColor = {
+                "Plant": "#00b159",
+                "Gene": "#00aedb",
+                "Disease": "#d11141",
+                "Medical_Heading": "#d11141",
+                "Chemical": "#ffc425",
+                "Pathway": "#f37735"
+            }
             if (store.getState().app.drawForceDirectedGraph) {
                 console.log("d3 should draw");
                 var graph = Singleton.neo4jData.d3_graph;

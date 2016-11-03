@@ -64401,26 +64401,27 @@ webpackJsonp([1,2],[
 	var D3ForceDirectedGraph = (0, _reactD3Wrap2.default)({
 	    initialize: function initialize(svg, data, options) {
 	        // Optional initialize method called once when component mounts
+	
+	        // continue your d3 implementation as usual...
 	        _Singleton2.default.d3Data.svg = d3.select(svg).append('g').attr('transform', 'translate(' + options.margin.left + ', ' + options.margin.top + ')');
 	        _Singleton2.default.d3Data.width = +_Singleton2.default.d3Data.svg.attr("width");
 	        _Singleton2.default.d3Data.height = +_Singleton2.default.d3Data.svg.attr("height");
 	
-	        // continue your d3 implementation as usual...
-	        _Singleton2.default.d3Data.simulation = d3.forceSimulation().force("link", d3.forceLink().id(function (d) {
-	            return d.index;
-	        })).force("charge", d3.forceManyBody()).force("center", d3.forceCenter(_Singleton2.default.d3Data.width / 2, _Singleton2.default.d3Data.height / 2));
-	
-	        _Singleton2.default.d3Data.labelColor = {
-	            "Plant": "#00b159",
-	            "Gene": "#00aedb",
-	            "Disease": "#d11141",
-	            "Medical_Heading": "#d11141",
-	            "Chemical": "#ffc425",
-	            "Pathway": "#f37735"
-	        };
-	
 	        _store2.default.subscribe(function () {
 	            console.log("State changed");
+	
+	            _Singleton2.default.d3Data.simulation = d3.forceSimulation().force("link", d3.forceLink().id(function (d) {
+	                return d.index;
+	            })).force("charge", d3.forceManyBody()).force("center", d3.forceCenter(_Singleton2.default.d3Data.width / 2, _Singleton2.default.d3Data.height / 2));
+	
+	            _Singleton2.default.d3Data.labelColor = {
+	                "Plant": "#00b159",
+	                "Gene": "#00aedb",
+	                "Disease": "#d11141",
+	                "Medical_Heading": "#d11141",
+	                "Chemical": "#ffc425",
+	                "Pathway": "#f37735"
+	            };
 	            if (_store2.default.getState().app.drawForceDirectedGraph) {
 	                var ticked = function ticked() {
 	                    link.attr("x1", function (d) {
