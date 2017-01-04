@@ -43,18 +43,19 @@ const D3ForceDirectedGraph = d3Wrap({
                 var graph = Singleton.neo4jData.d3_graph;
 
                     var link = Singleton.d3Data.svg.append("g")
-                        .attr("class", "links")
                         .selectAll("line")
                         .data(graph.links)
                         .enter().append("line")
+                        .attr("class", "link")
+                        .style("marker-end",  "url(#suit)") // direction arrow
                         .attr("stroke", "#999")
                         .attr("stroke-opacity", "0.6")
                         .attr("stroke-width", function (d) {
-                            return 1.0; //Math.sqrt(d.value);
+                            return 1.0; // an edge-weight calculation can eventually replace this placeholder number
                         });
 
                     var node = Singleton.d3Data.svg.append("g")
-                        .attr("class", "nodes")
+                        .attr("class", "node")
                         .selectAll("circle")
                         .data(graph.nodes)
                         .enter().append("circle")
@@ -102,7 +103,39 @@ const D3ForceDirectedGraph = d3Wrap({
                             .attr("cy", function (d) {
                                 return d.y;
                             });
+
+                        node.each(collide(0.5)); // collision detection
                     }
+                  // Resolves collisions between d and all other circles.
+                  var padding = 1, // separation between circles
+                      radius=10;
+
+                  function collide(alpha) {
+                    var quadtree = d3.geom.quadtree(graph.nodes);
+                    return function(d) {
+                      var rb = 2*radius + padding,
+                          nx1 = d.x - rb,
+                          nx2 = d.x + rb,
+                          ny1 = d.y - rb,
+                          ny2 = d.y + rb;
+
+                      quadtree.visit(function(quad, x1, y1, x2, y2) {
+                        if (quad.point && (quad.point !== d)) {
+                          var x = d.x - quad.point.x,
+                              y = d.y - quad.point.y,
+                              l = Math.sqrt(x * x + y * y);
+                            if (l < rb) {
+                            l = (l - rb) / l * alpha;
+                            d.x -= x *= l;
+                            d.y -= y *= l;
+                            quad.point.x += x;
+                            quad.point.y += y;
+                          }
+                        }
+                        return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+                      });
+                    };
+                  }
 
                 function dragstarted(d) {
                     if (!d3.event.active)  Singleton.d3Data.simulation.alphaTarget(0.3).restart();
@@ -120,6 +153,22 @@ const D3ForceDirectedGraph = d3Wrap({
                     d.fx = null;
                     d.fy = null;
                 }
+
+                // direction-arrow marker used when creating links
+                Singleton.d3Data.svg.append("defs").selectAll("marker")
+                    .data(["suit", "licensing", "resolved"])
+                  .enter().append("marker")
+                    .attr("id", function(d) { return d; })
+                    .attr("viewBox", "0 -5 10 10")
+                    .attr("refX", 25)
+                    .attr("refY", 0)
+                    .attr("markerWidth", 6)
+                    .attr("markerHeight", 6)
+                    .attr("orient", "auto")
+                  .append("path")
+                    .attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")
+                    .style("stroke", "#4679BD")
+                    .style("opacity", "0.6");
             }
         });
     },
